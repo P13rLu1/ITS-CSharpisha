@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITS-CSharpisha", "ITS-CSharpisha\ITS-CSharpisha.csproj", "{5F042C9E-C6F7-43E0-9B24-7DF89D1312E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroPazzo", "RegistroPazzo\RegistroPazzo.csproj", "{5F042C9E-C6F7-43E0-9B24-7DF89D1312E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
