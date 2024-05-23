@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using RegistroMenoPazzo.Models;
 
-namespace RegistroMenoPazzo;
+namespace RegistroMenoPazzo.Services;
 
 internal class Registro
 {

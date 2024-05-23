@@ -1,6 +1,7 @@
 ﻿using System;
+using RegistroMenoPazzo.Services;
 
-namespace RegistroMenoPazzo;
+namespace RegistroMenoPazzo.Models;
 
 internal class Studente
 {

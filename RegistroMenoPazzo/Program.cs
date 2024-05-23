@@ -26,6 +26,8 @@
 //     Utilizza classi e metodi per separare la logica
 
 using System;
+using RegistroMenoPazzo.Models;
+using RegistroMenoPazzo.Services;
 
 namespace RegistroMenoPazzo;
 
