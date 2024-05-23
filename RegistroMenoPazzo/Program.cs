@@ -23,6 +23,44 @@
 //     - Conferma dell'eliminazione prima dell'operazione
 //
 //     Gestisci tutti gli errori ed eccezioni
+//     Utilizza classi e metodi per separare la logica
+
 using System;
 
-Console.WriteLine("Hello, World!");
+namespace RegistroMenoPazzo;
+
+public abstract class Program
+{
+    public static void Main()
+    {
+        Console.WriteLine("Benvenuto nel registro elettronico!");
+        var registro = new Registro();
+        string? scelta;
+        do
+        {
+            Console.Write(
+                "1. Visualizza registro\n2. Aggiungi studente\n3. Modifica studente\n4. Cancella studente\n5. Esci\nScelta: ");
+            scelta = Console.ReadLine();
+            switch (scelta)
+            {
+                case "1":
+                    registro.VisualizzaRegistro();
+                    break;
+                case "2":
+                    Studente.AggiungiStudente();
+                    break;
+                case "3":
+                    Studente.ModificaStudente();
+                    break;
+                case "4":
+                    Studente.CancellaStudente();
+                    break;
+                case "5":
+                    return;
+                default:
+                    Console.WriteLine("Scelta non valida");
+                    break;
+            }
+        } while (scelta != "5");
+    }
+}
