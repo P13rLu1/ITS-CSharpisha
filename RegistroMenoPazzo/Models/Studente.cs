@@ -67,14 +67,14 @@ internal class Studente
         } while (string.IsNullOrWhiteSpace(classe));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
-        Registro.Studenti.Add(studente);
+        Program.Studenti.Add(studente);
         Console.WriteLine("Studente aggiunto con successo!");
         Registro.PremiUnTastoPerContinuare();
     }
     
     public static void ModificaStudente()
     {
-        if (Registro.Studenti.Count == 0)
+        if (Program.Studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             Registro.PremiUnTastoPerContinuare();
@@ -83,7 +83,7 @@ internal class Studente
         Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = Registro.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = Program.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -165,7 +165,7 @@ internal class Studente
     
     internal static void CancellaStudente()
     {
-        if (Registro.Studenti.Count == 0)
+        if (Program.Studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             Registro.PremiUnTastoPerContinuare();
@@ -175,7 +175,7 @@ internal class Studente
         Console.Write("Inserisci il nome, cognome o ID dello studente da cancellare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = Registro.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = Program.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -186,7 +186,7 @@ internal class Studente
         Console.Write("Sei sicuro di voler cancellare questo studente? (s/n): ");
         var conferma = Console.ReadLine() ?? "";
         if (conferma != "s") return;
-        Registro.Studenti.Remove(studente);
+        Program.Studenti.Remove(studente);
         Console.WriteLine("Studente cancellato con successo!");
         Registro.PremiUnTastoPerContinuare();
     }
