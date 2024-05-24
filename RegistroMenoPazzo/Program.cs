@@ -3,7 +3,7 @@ using RegistroMenoPazzo.Services;
 
 namespace RegistroMenoPazzo;
 
-public abstract class Program
+public static class Program
 {
     public static void Main()
     {

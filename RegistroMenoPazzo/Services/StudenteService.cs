@@ -53,7 +53,7 @@ public class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = _studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -145,7 +145,7 @@ public class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da cancellare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = _studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
