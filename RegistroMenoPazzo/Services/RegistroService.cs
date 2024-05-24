@@ -8,7 +8,7 @@ namespace RegistroMenoPazzo.Services;
 internal class RegistroService
 {
     internal static readonly List<Studente> Studenti = [];
-    internal void MenuPrincipale()
+    internal static void MenuPrincipale()
     {
         Console.WriteLine("Benvenuto nel registro elettronico!");
         string? scelta;
