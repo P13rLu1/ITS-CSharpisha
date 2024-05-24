@@ -50,77 +50,50 @@ public class StudenteService
             _registroUtils.PremiUnTastoPerContinuare();
             return;
         }
-        Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
-        var ricerca = Console.ReadLine()?.ToUpper();
+
+        var ricerca = _registroUtils.SearchStudent();
         
         var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
+            _registroUtils.PremiUnTastoPerContinuare();
             return;
         }
-        Console.WriteLine($"\nStai Modificando lo studente: Nome: {studente.Nome} Cognome: {studente.Cognome} Data di nascita: {studente.DataDiNascita} Classe: {studente.Classe} ID: {studente.Id}");
+        Console.WriteLine($"\nStai Modificando lo studente:\nNome: {studente.Nome}\nCognome: {studente.Cognome}\nData di nascita: {studente.DataDiNascita}\nClasse: {studente.Classe}\nID: {studente.Id}");
         var sceltaValida = true;
         do
         {
-            Console.WriteLine("1. Modifica nome\n2. Modifica cognome\n3. Modifica classe\n4. Esci");
-            Console.Write("Scelta: ");
+            Console.Write("1. Modifica nome\n2. Modifica cognome\n3. Modifica classe\n4. Esci\nScelta: ");
             var scelta = Console.ReadLine() ?? "";
             switch (scelta)
             {
                 case "1":
-                    var nomeErrore = true;
+                    string? nuovoNome;
                     do
                     {
                         Console.Write("Nuovo nome: ");
-                        var nuovoNome = Console.ReadLine()?.ToUpper();
-                        if (string.IsNullOrWhiteSpace(nuovoNome))
-                        {
-                            Console.WriteLine("Il cognome non può essere vuoto. Riprova.");
-                        }
-                        else
-                        {
-                            studente.Nome = nuovoNome;
-                            nomeErrore = false;
-                            Console.WriteLine($"Nome modificato con successo! Nuovo nome: {studente.Nome}");
-                        }
-                    } while (nomeErrore);
+                    } while (_registroUtils.CheckString( nuovoNome = Console.ReadLine()?.ToUpper(), "Il nome non puó essere vuoto!"));
+                    studente.Nome = nuovoNome;
+                    Console.WriteLine($"Nome modificato con successo! Nuovo nome: {studente.Nome}");
                     break;
                 case "2":
-                    var cognomeErrore = true;
+                    string? nuovoCognome;
                     do
                     {
                         Console.Write("Nuovo cognome: ");
-                        var nuovoCognome = Console.ReadLine()?.ToUpper();
-                        if (string.IsNullOrWhiteSpace(nuovoCognome))
-                        {
-                            Console.WriteLine("Il cognome non può essere vuoto. Riprova.");
-                        }
-                        else
-                        {
-                            studente.Cognome = nuovoCognome;
-                            cognomeErrore = false;
-                            Console.WriteLine($"Cognome modificato con successo! Nuovo cognome: {studente.Cognome}");
-                        }
-                    } while (cognomeErrore);    
+                    } while (_registroUtils.CheckString( nuovoCognome = Console.ReadLine()?.ToUpper(), "Il cognome non puó essere vuoto!"));
+                    studente.Cognome = nuovoCognome;
+                    Console.WriteLine($"Nome modificato con successo! Nuovo nome: {studente.Cognome}"); 
                     break;
                 case "3":
-                    var classeErrore = true;
+                    string? nuovaClasse;
                     do
                     {
                         Console.Write("Nuova classe: ");
-                        var nuovaClasse = Console.ReadLine()?.ToUpper();
-                        if (string.IsNullOrWhiteSpace(nuovaClasse))
-                        {
-                            Console.WriteLine("Il cognome non può essere vuoto. Riprova.");
-                        }
-                        else
-                        {
-                            studente.Classe = nuovaClasse;
-                            classeErrore = false;
-                            Console.WriteLine($"Classe modificata con successo! Nuova classe: {studente.Classe}");
-                        }
-                    } while(classeErrore);
+                    } while (_registroUtils.CheckString( nuovaClasse = Console.ReadLine()?.ToUpper(), "Il nome non puó essere vuoto!"));
+                    studente.Classe = nuovaClasse;
+                    Console.WriteLine($"Nome modificato con successo! Nuovo nome: {studente.Classe}");
                     break;
                 case "4":
                     Console.WriteLine("Modifica completata!");
@@ -142,8 +115,7 @@ public class StudenteService
             return;
         }
         
-        Console.Write("Inserisci il nome, cognome o ID dello studente da cancellare: ");
-        var ricerca = Console.ReadLine()?.ToUpper();
+        var ricerca = _registroUtils.SearchStudent();
         
         var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
@@ -153,8 +125,12 @@ public class StudenteService
         }
         
         Console.WriteLine($"Nome: {studente.Nome} Cognome: {studente.Cognome} Data di nascita: {studente.DataDiNascita} Classe: {studente.Classe} ID: {studente.Id}");
-        Console.Write("Sei sicuro di voler cancellare questo studente? (s/n): ");
-        var conferma = Console.ReadLine() ?? "";
+        
+        string? conferma;
+        do
+        {
+            Console.Write("Sei sicuro di voler cancellare lo studente? (s/n): ");
+        } while (_registroUtils.CheckString( conferma = Console.ReadLine()?.ToLower(), "La risposta non puó essere vuota!"));
         if (conferma != "s") return;
         _studenti.Remove(studente);
         Console.WriteLine("Studente cancellato con successo!");
