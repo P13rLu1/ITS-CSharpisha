@@ -2,15 +2,15 @@
 
 namespace RegistroMenoPazzo.Utils;
 
-public static class RegistroUtils
+public class RegistroUtils
 {
-    internal static void PremiUnTastoPerContinuare()
+    internal  void PremiUnTastoPerContinuare()
     {
         Console.WriteLine("Premi un tasto per continuare...");
         Console.ReadKey();
     }
     
-    internal static bool CheckString(string? input, string message)
+    internal  bool CheckString(string? input, string message)
     {
         if (!string.IsNullOrWhiteSpace(input)) return false;
         Console.WriteLine(message);
@@ -18,7 +18,7 @@ public static class RegistroUtils
 
     }
     
-    internal static bool CheckDates(DateOnly data, string message)
+    internal  bool CheckDates(DateOnly data, string message)
     {
         if (data != DateOnly.MinValue) return false;
         Console.WriteLine(message);

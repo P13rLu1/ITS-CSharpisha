@@ -9,37 +9,37 @@ namespace RegistroMenoPazzo.Services;
 public class StudenteService
 {
     private readonly List<Studente> _studenti = [];
-
+    private readonly RegistroUtils _registroUtils = new();
     internal void AggiungiStudente()
     {
         string? nome;  
         do
         { 
             Console.Write("Nome: ");
-        } while (RegistroUtils.CheckString( nome = Console.ReadLine()?.ToUpper(), "Il nome non puó essere vuoto!"));
+        } while (_registroUtils.CheckString( nome = Console.ReadLine()?.ToUpper(), "Il nome non puó essere vuoto!"));
         
         string? cognome;
         do
         {
             Console.Write("Cognome: ");
-        } while (RegistroUtils.CheckString( cognome = Console.ReadLine()?.ToUpper(), "Il cognome non puó essere vuoto!"));
+        } while (_registroUtils.CheckString( cognome = Console.ReadLine()?.ToUpper(), "Il cognome non puó essere vuoto!"));
         
         DateOnly dataDiNascita;
         do
         {
             Console.Write("Data di nascita: ");
-        } while (RegistroUtils.CheckDates(dataDiNascita = DateOnly.TryParse( Console.ReadLine(), out var data) ? data : DateOnly.MinValue, "Data non valida!") ); //assegna a dataDiNascita il valore di data se la conversione riesce, altrimenti DateOnly.MinValue e quindi andando dentro CheckDates restituisce true e il ciclo continua
+        } while (_registroUtils.CheckDates(dataDiNascita = DateOnly.TryParse( Console.ReadLine(), out var data) ? data : DateOnly.MinValue, "Data non valida!") ); //assegna a dataDiNascita il valore di data se la conversione riesce, altrimenti DateOnly.MinValue e quindi andando dentro CheckDates restituisce true e il ciclo continua
         
         string? classe;
         do
         {
             Console.Write("Classe: ");
-        } while (RegistroUtils.CheckString( classe = Console.ReadLine()?.ToUpper(), "La classe non puó essere vuota!"));
+        } while (_registroUtils.CheckString( classe = Console.ReadLine()?.ToUpper(), "La classe non puó essere vuota!"));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
         _studenti.Add(studente);
         Console.WriteLine("Studente aggiunto con successo!");
-        RegistroUtils.PremiUnTastoPerContinuare(); 
+        _registroUtils.PremiUnTastoPerContinuare(); 
     }
 
     internal void ModificaStudente()
@@ -47,7 +47,7 @@ public class StudenteService
         if (_studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
-            RegistroUtils.PremiUnTastoPerContinuare();
+            _registroUtils.PremiUnTastoPerContinuare();
             return;
         }
         Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
@@ -138,7 +138,7 @@ public class StudenteService
         if (_studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
-            RegistroUtils.PremiUnTastoPerContinuare();
+            _registroUtils.PremiUnTastoPerContinuare();
             return;
         }
         
@@ -158,7 +158,7 @@ public class StudenteService
         if (conferma != "s") return;
         _studenti.Remove(studente);
         Console.WriteLine("Studente cancellato con successo!");
-        RegistroUtils.PremiUnTastoPerContinuare();
+        _registroUtils.PremiUnTastoPerContinuare();
     }
 
     internal void VisualizzazioneStudenti()
@@ -168,7 +168,7 @@ public class StudenteService
         if (_studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
-            RegistroUtils.PremiUnTastoPerContinuare();
+            _registroUtils.PremiUnTastoPerContinuare();
             return;
         }
 
@@ -198,6 +198,6 @@ public class StudenteService
         {
             Console.WriteLine($"Nome: {studente.Nome}\nCognome: {studente.Cognome}\nData di nascita: {studente.DataDiNascita}\nClasse: {studente.Classe}\nID: {studente.Id}\n-----------------");
         }
-        RegistroUtils.PremiUnTastoPerContinuare();
+        _registroUtils.PremiUnTastoPerContinuare();
     }
 }
