@@ -4,7 +4,7 @@ namespace RegistroMenoPazzo.Services;
 
 internal class RegistroService
 { 
-    private readonly StudenteService _studenteService = new StudenteService();
+    private readonly StudenteService _studenteService = new();
 
     internal void MenuPrincipale()
     {
