@@ -12,45 +12,25 @@ public static class StudenteService
         do
         { 
             Console.Write("Nome: ");
-            nome = Console.ReadLine()?.ToUpper();
-            if (string.IsNullOrWhiteSpace(nome))
-            {
-                Console.WriteLine("Il nome non puó essere vuoto!");
-            }
-        } while (string.IsNullOrWhiteSpace(nome));
+        } while (RegistroUtils.CheckString( nome = Console.ReadLine()?.ToUpper(), "Il nome non puó essere vuoto!"));
         
         string? cognome;
         do
         {
             Console.Write("Cognome: ");
-            cognome = Console.ReadLine()?.ToUpper();
-            if (string.IsNullOrWhiteSpace(cognome))
-            {
-                Console.WriteLine("Il cognome non puó essere vuoto!");
-            }
-        } while (string.IsNullOrWhiteSpace(cognome));
+        } while (RegistroUtils.CheckString( cognome = Console.ReadLine()?.ToUpper(), "Il cognome non puó essere vuoto!"));
         
         DateOnly dataDiNascita;
         do
         {
             Console.Write("Data di nascita: ");
-            dataDiNascita = DateOnly.Parse(Console.ReadLine() ?? "");
-            if (dataDiNascita == DateOnly.MinValue)
-            {
-                Console.WriteLine("Data di nascita non valida!");
-            }
-        } while (dataDiNascita == DateOnly.MinValue);
+        } while (RegistroUtils.CheckDates(dataDiNascita = DateOnly.TryParse( Console.ReadLine(), out var data) ? data : DateOnly.MinValue, "Data non valida!") );
         
         string? classe;
         do
         {
             Console.Write("Classe: ");
-            classe = Console.ReadLine()?.ToUpper();
-            if (string.IsNullOrWhiteSpace(classe))
-            {
-                Console.WriteLine("La classe non puó essere vuota!");
-            }
-        } while (string.IsNullOrWhiteSpace(classe));
+        } while (RegistroUtils.CheckString( classe = Console.ReadLine()?.ToUpper(), "La classe non puó essere vuota!"));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
         RegistroService.Studenti.Add(studente);
