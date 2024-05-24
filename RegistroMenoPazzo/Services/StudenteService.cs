@@ -187,15 +187,17 @@ public class StudenteService
                 studentiOrdinati = studentiOrdinati.OrderBy(studente => studente.Id).ToList();
                 break;
             case "e":
-                return;
+                break;
             default:
                 Console.WriteLine("Scelta non valida");
                 break;
         }
-
+        
+        Console.WriteLine();
         foreach (var studente in studentiOrdinati)
         {
             Console.WriteLine($"Nome: {studente.Nome}\nCognome: {studente.Cognome}\nData di nascita: {studente.DataDiNascita}\nClasse: {studente.Classe}\nID: {studente.Id}\n-----------------");
         }
+        RegistroUtils.PremiUnTastoPerContinuare();
     }
 }
