@@ -53,14 +53,14 @@ public static class StudenteService
         } while (string.IsNullOrWhiteSpace(classe));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
-        Program.Studenti.Add(studente);
+        RegistroService.Studenti.Add(studente);
         Console.WriteLine("Studente aggiunto con successo!");
         RegistroUtils.PremiUnTastoPerContinuare();
     }
     
     public static void ModificaStudente()
     {
-        if (Program.Studenti.Count == 0)
+        if (RegistroService.Studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             RegistroUtils.PremiUnTastoPerContinuare();
@@ -69,7 +69,7 @@ public static class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = Program.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = RegistroService.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -151,7 +151,7 @@ public static class StudenteService
     
     internal static void CancellaStudente()
     {
-        if (Program.Studenti.Count == 0)
+        if (RegistroService.Studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             RegistroUtils.PremiUnTastoPerContinuare();
@@ -161,7 +161,7 @@ public static class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da cancellare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = Program.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = RegistroService.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -172,7 +172,7 @@ public static class StudenteService
         Console.Write("Sei sicuro di voler cancellare questo studente? (s/n): ");
         var conferma = Console.ReadLine() ?? "";
         if (conferma != "s") return;
-        Program.Studenti.Remove(studente);
+        RegistroService.Studenti.Remove(studente);
         Console.WriteLine("Studente cancellato con successo!");
         RegistroUtils.PremiUnTastoPerContinuare();
     }

@@ -5,10 +5,10 @@ using RegistroMenoPazzo.Utils;
 
 namespace RegistroMenoPazzo.Services;
 
-internal static class RegistroService
+internal class RegistroService
 {
-    
-    internal static void MenuPrincipale()
+    internal static readonly List<Studente> Studenti = [];
+    internal void MenuPrincipale()
     {
         Console.WriteLine("Benvenuto nel registro elettronico!");
         string? scelta;
@@ -42,27 +42,27 @@ internal static class RegistroService
 
     private static void VisualizzaRegistro()
     {
-        if (Program.Studenti.Count == 0)
+        if (Studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             RegistroUtils.PremiUnTastoPerContinuare();
             return;
         }
         
-        VisualizzazioneStudenti(Program.Studenti);
+        VisualizzazioneStudenti(Studenti);
         
         Console.Write("Vuoi ordinare gli studenti per nome, cognome o ID (e per uscire)? (n/c/i/e): ");
         var scelta = Console.ReadLine() ?? "";
         switch (scelta)
         {
             case "n":
-                Program.Studenti.Sort((s1, s2) => string.Compare(s1.Nome, s2.Nome, StringComparison.Ordinal));
+                Studenti.Sort((s1, s2) => string.Compare(s1.Nome, s2.Nome, StringComparison.Ordinal));
                 break;
             case "c":
-                Program.Studenti.Sort((s1, s2) => string.Compare(s1.Cognome, s2.Cognome, StringComparison.Ordinal));
+                Studenti.Sort((s1, s2) => string.Compare(s1.Cognome, s2.Cognome, StringComparison.Ordinal));
                 break;
             case "i":
-                Program.Studenti.Sort((s1, s2) => s1.Id.CompareTo(s2.Id));
+                Studenti.Sort((s1, s2) => s1.Id.CompareTo(s2.Id));
                 break;
             case "e":
                 return;
@@ -71,7 +71,7 @@ internal static class RegistroService
                 break;
         }
         
-        VisualizzazioneStudenti(Program.Studenti);
+        VisualizzazioneStudenti(Studenti);
         RegistroUtils.PremiUnTastoPerContinuare();
     }
     
