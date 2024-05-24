@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using RegistroMenoPazzo.Models;
-using RegistroMenoPazzo.Utils;
 
 namespace RegistroMenoPazzo.Services;
 
 internal class RegistroService
-{
-    internal static readonly List<Studente> Studenti = [];
+{ 
+    private readonly StudenteService _studenteService = new StudenteService();
+
     internal void MenuPrincipale()
     {
         Console.WriteLine("Benvenuto nel registro elettronico!");
@@ -20,16 +18,16 @@ internal class RegistroService
             switch (scelta)
             {
                 case "1":
-                    VisualizzaRegistro();
+                    _studenteService.VisualizzazioneStudenti();
                     break;
-                case "2":
-                    StudenteService.AggiungiStudente();
+                case "2": 
+                    _studenteService.AggiungiStudente();
                     break;
                 case "3":
-                    StudenteService.ModificaStudente();
+                    _studenteService.ModificaStudente();
                     break;
                 case "4":
-                    StudenteService.CancellaStudente();
+                    _studenteService.CancellaStudente();
                     break;
                 case "5":
                     return;
@@ -38,49 +36,5 @@ internal class RegistroService
                     break;
             }
         } while (scelta != "5");
-    }
-
-    private static void VisualizzaRegistro()
-    {
-        if (Studenti.Count == 0)
-        {
-            Console.WriteLine("\nNessuno studente presente nel registro!");
-            RegistroUtils.PremiUnTastoPerContinuare();
-            return;
-        }
-        
-        VisualizzazioneStudenti(Studenti);
-        
-        Console.Write("Vuoi ordinare gli studenti per nome, cognome o ID (e per uscire)? (n/c/i/e): ");
-        var scelta = Console.ReadLine() ?? "";
-        switch (scelta)
-        {
-            case "n":
-                Studenti.Sort((s1, s2) => string.Compare(s1.Nome, s2.Nome, StringComparison.Ordinal));
-                break;
-            case "c":
-                Studenti.Sort((s1, s2) => string.Compare(s1.Cognome, s2.Cognome, StringComparison.Ordinal));
-                break;
-            case "i":
-                Studenti.Sort((s1, s2) => s1.Id.CompareTo(s2.Id));
-                break;
-            case "e":
-                return;
-            default:
-                Console.WriteLine("Scelta non valida");
-                break;
-        }
-        
-        VisualizzazioneStudenti(Studenti);
-        RegistroUtils.PremiUnTastoPerContinuare();
-    }
-    
-    private static void VisualizzazioneStudenti(List<Studente> studenti)
-    {
-        Console.WriteLine();
-        foreach (var studente in studenti)
-        {
-            Console.WriteLine($"Nome: {studente.Nome}\nCognome: {studente.Cognome}\nData di nascita: {studente.DataDiNascita}\nClasse: {studente.Classe}\nID: {studente.Id}\n-----------------");
-        }
-    }
+    } 
 }

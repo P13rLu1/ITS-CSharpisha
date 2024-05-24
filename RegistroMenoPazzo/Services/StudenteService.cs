@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RegistroMenoPazzo.Models;
 using RegistroMenoPazzo.Utils;
 
 namespace RegistroMenoPazzo.Services;
 
-public static class StudenteService
+public class StudenteService
 {
-    internal static void AggiungiStudente()
+    private readonly List<Studente> _studenti = [];
+
+    internal void AggiungiStudente()
     {
         string? nome;  
         do
@@ -33,14 +37,14 @@ public static class StudenteService
         } while (RegistroUtils.CheckString( classe = Console.ReadLine()?.ToUpper(), "La classe non puó essere vuota!"));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
-        RegistroService.Studenti.Add(studente);
+        _studenti.Add(studente);
         Console.WriteLine("Studente aggiunto con successo!");
-        RegistroUtils.PremiUnTastoPerContinuare();
+        RegistroUtils.PremiUnTastoPerContinuare(); 
     }
-    
-    public static void ModificaStudente()
+
+    internal void ModificaStudente()
     {
-        if (RegistroService.Studenti.Count == 0)
+        if (_studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             RegistroUtils.PremiUnTastoPerContinuare();
@@ -49,7 +53,7 @@ public static class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da modificare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = RegistroService.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = _studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -129,9 +133,9 @@ public static class StudenteService
         } while (sceltaValida);
     }
     
-    internal static void CancellaStudente()
+    internal void CancellaStudente()
     {
-        if (RegistroService.Studenti.Count == 0)
+        if (_studenti.Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             RegistroUtils.PremiUnTastoPerContinuare();
@@ -141,7 +145,7 @@ public static class StudenteService
         Console.Write("Inserisci il nome, cognome o ID dello studente da cancellare: ");
         var ricerca = Console.ReadLine()?.ToUpper();
         
-        var studente = RegistroService.Studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
+        var studente = _studenti.Find(s => s.Nome == ricerca || s.Cognome == ricerca || s.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -152,8 +156,46 @@ public static class StudenteService
         Console.Write("Sei sicuro di voler cancellare questo studente? (s/n): ");
         var conferma = Console.ReadLine() ?? "";
         if (conferma != "s") return;
-        RegistroService.Studenti.Remove(studente);
+        _studenti.Remove(studente);
         Console.WriteLine("Studente cancellato con successo!");
         RegistroUtils.PremiUnTastoPerContinuare();
+    }
+
+    internal void VisualizzazioneStudenti()
+    {
+        Console.WriteLine();
+
+        if (_studenti.Count == 0)
+        {
+            Console.WriteLine("\nNessuno studente presente nel registro!");
+            RegistroUtils.PremiUnTastoPerContinuare();
+            return;
+        }
+
+        Console.Write("Vuoi ordinare gli studenti per nome, cognome o ID (e per non ordinarli)? (n/c/i/e): ");
+        var scelta = Console.ReadLine() ?? "";
+        var studentiOrdinati = _studenti;
+        switch (scelta)
+        {
+            case "n":
+                studentiOrdinati = studentiOrdinati.OrderBy(studente => studente.Nome).ToList();
+                break;
+            case "c":
+                studentiOrdinati = studentiOrdinati.OrderBy(studente => studente.Cognome).ToList();
+                break;
+            case "i":
+                studentiOrdinati = studentiOrdinati.OrderBy(studente => studente.Id).ToList();
+                break;
+            case "e":
+                return;
+            default:
+                Console.WriteLine("Scelta non valida");
+                break;
+        }
+
+        foreach (var studente in studentiOrdinati)
+        {
+            Console.WriteLine($"Nome: {studente.Nome}\nCognome: {studente.Cognome}\nData di nascita: {studente.DataDiNascita}\nClasse: {studente.Classe}\nID: {studente.Id}\n-----------------");
+        }
     }
 }
