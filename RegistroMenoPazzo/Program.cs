@@ -8,6 +8,6 @@ public abstract class Program
     public static void Main()
     {
         var registro = new RegistroService();
-        RegistroService.MenuPrincipale();
+        registro.MenuPrincipale();
     }
 }
