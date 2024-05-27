@@ -1,15 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using RegistroMenoPazzo.Models;
+using RegistroMenoPazzo.Stores;
 using RegistroMenoPazzo.Utils;
 
 namespace RegistroMenoPazzo.Services;
 
 public class StudenteService
 {
-    private readonly List<Studente> _studenti = [];
+    private readonly StudenteStore _studenteStore;
+    internal StudenteService(StudenteStore studenteStore)
+    {
+        _studenteStore = studenteStore;
+    }
     private readonly RegistroUtils _registroUtils = new();
+    
+    
     internal void AggiungiStudente()
     {
         string? nome;  
@@ -37,14 +43,14 @@ public class StudenteService
         } while (_registroUtils.CheckString( classe = Console.ReadLine()?.ToUpper(), "La classe non puó essere vuota!"));
         
         var studente = new Studente(nome, cognome, dataDiNascita, classe);
-        _studenti.Add(studente);
+        _studenteStore.AggiungiStudente(studente);
         Console.WriteLine("Studente aggiunto con successo!");
         _registroUtils.PremiUnTastoPerContinuare(); 
     }
 
     internal void ModificaStudente()
     {
-        if (_studenti.Count == 0)
+        if ( _studenteStore.Get().Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             _registroUtils.PremiUnTastoPerContinuare();
@@ -52,8 +58,8 @@ public class StudenteService
         }
 
         var ricerca = _registroUtils.SearchStudent();
-        
-        var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
+
+        var studente = _studenteStore.Get().Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -108,7 +114,7 @@ public class StudenteService
     
     internal void CancellaStudente()
     {
-        if (_studenti.Count == 0)
+        if (_studenteStore.Get().Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             _registroUtils.PremiUnTastoPerContinuare();
@@ -117,7 +123,7 @@ public class StudenteService
         
         var ricerca = _registroUtils.SearchStudent();
         
-        var studente = _studenti.Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
+        var studente = _studenteStore.Get().Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -132,7 +138,8 @@ public class StudenteService
             Console.Write("Sei sicuro di voler cancellare lo studente? (s/n): ");
         } while (_registroUtils.CheckString( conferma = Console.ReadLine()?.ToLower(), "La risposta non puó essere vuota!"));
         if (conferma != "s") return;
-        _studenti.Remove(studente);
+        _studenteStore.CancellaStudente(studente.Id);
+        
         Console.WriteLine("Studente cancellato con successo!");
         _registroUtils.PremiUnTastoPerContinuare();
     }
@@ -141,7 +148,7 @@ public class StudenteService
     {
         Console.WriteLine();
 
-        if (_studenti.Count == 0)
+        if (_studenteStore.Get().Count == 0)
         {
             Console.WriteLine("\nNessuno studente presente nel registro!");
             _registroUtils.PremiUnTastoPerContinuare();
@@ -150,7 +157,7 @@ public class StudenteService
 
         Console.Write("Vuoi ordinare gli studenti per nome, cognome o ID (e per non ordinarli)? (n/c/i/e): ");
         var scelta = Console.ReadLine() ?? "";
-        var studentiOrdinati = _studenti;
+        var studentiOrdinati = _studenteStore.Get();
         switch (scelta)
         {
             case "n":

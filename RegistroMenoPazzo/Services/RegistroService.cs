@@ -1,10 +1,17 @@
 ﻿using System;
+using RegistroMenoPazzo.Stores;
 
 namespace RegistroMenoPazzo.Services;
 
 internal class RegistroService
-{ 
-    private readonly StudenteService _studenteService = new();
+{
+    private readonly StudenteService _studenteService;
+
+    internal RegistroService()
+    {
+        StudenteStore studenteStore = new();
+        _studenteService = new(studenteStore);
+    }
 
     internal void MenuPrincipale()
     {
