@@ -10,7 +10,7 @@ internal class RegistroService
     internal RegistroService()
     {
         StudenteStore studenteStore = new();
-        _studenteService = new(studenteStore);
+        _studenteService = new StudenteService(studenteStore);
     }
 
     internal void MenuPrincipale()

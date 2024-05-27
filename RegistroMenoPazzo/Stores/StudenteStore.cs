@@ -19,18 +19,18 @@ internal class StudenteStore
             return null;
         }
 
-        var studenteTrovato = _studenti.Find(s => s.Nome == input);
+        var studenteTrovato = _studenti.Find(studente => studente.Nome == input);
         if (studenteTrovato != null)
         {
             return studenteTrovato;
         }
-        studenteTrovato = _studenti.Find(s => s.Cognome == input);
+        studenteTrovato = _studenti.Find(studente => studente.Cognome == input);
         if (studenteTrovato != null)
         {
             return studenteTrovato;
         }
         
-        studenteTrovato = _studenti.Find(s => s.Id.ToString() == input);
+        studenteTrovato = _studenti.Find(studente => studente.Id.ToString() == input);
         return studenteTrovato ?? null;
     }
     
