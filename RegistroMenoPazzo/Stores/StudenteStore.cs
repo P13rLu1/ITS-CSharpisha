@@ -11,6 +11,28 @@ internal class StudenteStore
     {
         return _studenti;
     }
+
+    internal Studente? Get(string? input)
+    {
+        if (input == null)
+        {
+            return null;
+        }
+
+        var studenteTrovato = _studenti.Find(s => s.Nome == input);
+        if (studenteTrovato != null)
+        {
+            return studenteTrovato;
+        }
+        studenteTrovato = _studenti.Find(s => s.Cognome == input);
+        if (studenteTrovato != null)
+        {
+            return studenteTrovato;
+        }
+        
+        studenteTrovato = _studenti.Find(s => s.Id.ToString() == input);
+        return studenteTrovato ?? null;
+    }
     
     internal bool AggiungiStudente(Studente item)
     {

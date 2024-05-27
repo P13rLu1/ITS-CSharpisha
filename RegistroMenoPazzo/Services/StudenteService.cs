@@ -59,7 +59,7 @@ public class StudenteService
 
         var ricerca = _registroUtils.SearchStudent();
 
-        var studente = _studenteStore.Get().Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
+        var studente = _studenteStore.Get(ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
@@ -123,7 +123,7 @@ public class StudenteService
         
         var ricerca = _registroUtils.SearchStudent();
         
-        var studente = _studenteStore.Get().Find(studente => studente.Nome == ricerca || studente.Cognome == ricerca || studente.Id.ToString() == ricerca);
+        var studente = _studenteStore.Get(ricerca);
         if (studente == null)
         {
             Console.WriteLine("Studente non trovato!");
