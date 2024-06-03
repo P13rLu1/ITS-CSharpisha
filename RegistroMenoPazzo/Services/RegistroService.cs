@@ -3,11 +3,11 @@ using RegistroMenoPazzo.Stores;
 
 namespace RegistroMenoPazzo.Services;
 
-public class RegistroService
+internal class RegistroService
 {
     private readonly StudenteService _studenteService; //crea un'istanza di StudenteService e la assegna a _studenteService
 
-    public RegistroService() //costruttore di RegistroService 
+    internal RegistroService() //costruttore di RegistroService 
     {
         StudenteStore studenteStore = new(); //crea un'istanza di StudenteStore e la assegna a studenteStore
         _studenteService = new StudenteService(studenteStore); //crea un'istanza di StudenteService e la assegna a _studenteService

@@ -1,31 +1,30 @@
 ﻿using System;
 
-namespace RegistroMenoPazzo.Utils;
+namespace AziendaAlberghieraVernazza.Utils;
 
-public class RegistroUtils
+public static class AlbergoUtils
 {
-    internal  void PremiUnTastoPerContinuare()
+    internal static void PremiUnTastoPerContinuare()
     {
         Console.WriteLine("Premi un tasto per continuare...");
         Console.ReadKey();
     }
     
-    internal  bool CheckString(string? input, string message)
+    internal static bool CheckString(string? input, string message)
     {
         if (!string.IsNullOrWhiteSpace(input)) return false;
         Console.WriteLine(message);
         return true;
-
     }
-    
-    internal  bool CheckDates(DateOnly data, string message)
+
+    internal static bool CheckInt(string? input, string message)
     {
-        if (data != DateOnly.MinValue) return false;
+        if (int.TryParse(input, out _)) return false;
         Console.WriteLine(message);
         return true;
     }
     
-    internal string SearchStudent()
+    internal static string SearchCliente()
     {
         string ricerca;
         do
