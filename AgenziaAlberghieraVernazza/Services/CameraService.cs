@@ -121,12 +121,12 @@ public class CameraService(CameraStore cameraStore)
         return idCamera;
     }
     
-    public List<Camera> FiltraCamereDisponibili(DateOnly dataArrivo, DateOnly dataPartenza, int numeroLetti)
+    public List<Camera> FiltraCamereDisponibili(DateOnly dataArrivo, DateOnly dataPartenza, int numeroLetti, List<Prenotazione> prenotazioni)
     {
         var tutteLeCamere = _cameraStore.Get(); // funzione che restituisce tutte le camere
         var camereDisponibili = tutteLeCamere.Where(camera => camera.NumeroLetti == numeroLetti &&
                                                               !_cameraStore.CameraOccupata(camera.Id, dataArrivo,
-                                                                  dataPartenza)).ToList();  //funzione che vede se le camere che ci stanno hanno il numero dei letti richiesti e se sono occupate in quella data richiamando la funzione CameraOccupata del CameraStore
+                                                                  dataPartenza, prenotazioni)).ToList();  //funzione che vede se le camere che ci stanno hanno il numero dei letti richiesti e se sono occupate in quella data richiamando la funzione CameraOccupata del CameraStore
         return camereDisponibili;
     }
 }

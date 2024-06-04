@@ -6,7 +6,7 @@ using AziendaAlberghieraVernazza.Stores.Interfaces;
 
 namespace AziendaAlberghieraVernazza.Stores;
 
-public class CameraStore(List<Prenotazione> prenotazioni) : IStore<Camera>
+public class CameraStore : IStore<Camera>
 {
     private readonly List<Camera> _camere = [];
 
@@ -26,7 +26,7 @@ public class CameraStore(List<Prenotazione> prenotazioni) : IStore<Camera>
         return true;
     }
     
-    public bool CameraOccupata(int idCamera, DateOnly dataArrivo, DateOnly dataPartenza)
+    public bool CameraOccupata(int idCamera, DateOnly dataArrivo, DateOnly dataPartenza, List<Prenotazione> prenotazioni)
     {
         return prenotazioni.Any(p => p.IdCamera == idCamera && 
                                       p.DataArrivo < dataPartenza && 

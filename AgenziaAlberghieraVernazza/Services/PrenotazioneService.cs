@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AziendaAlberghieraVernazza.Models;
 using AziendaAlberghieraVernazza.Stores;
 using AziendaAlberghieraVernazza.Utils;
@@ -80,8 +81,8 @@ public class PrenotazioneService(
         {
             Console.Write("Inserisci il numero di letti che servono al cliente: ");
         } while (AlbergoUtils.CheckInt(numeroLetti = Console.ReadLine() ?? "", "Il numero di letti non puó essere vuoto!"));
-
-        var camereDisponibili = cameraService.FiltraCamereDisponibili(DateOnly.Parse(dataArrivo), DateOnly.Parse(dataPartenza), int.Parse(numeroLetti)); // funzione che restituisce le camere disponibili in base ai parametri passati (data arrivo, data partenza, numero letti)
+        List<Prenotazione> prenotazioni= prenotazioneStore.Get();
+        var camereDisponibili = cameraService.FiltraCamereDisponibili(DateOnly.Parse(dataArrivo), DateOnly.Parse(dataPartenza), int.Parse(numeroLetti), prenotazioni); // funzione che restituisce le camere disponibili in base ai parametri passati (data arrivo, data partenza, numero letti)
         var idCamera = cameraService.SelezionaCamera(camereDisponibili); // funzione che restituisce l'id della camera selezionata dall'utente se presente, altrimenti null
 
         if (idCamera == null)
