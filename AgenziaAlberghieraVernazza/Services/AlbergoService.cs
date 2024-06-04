@@ -6,8 +6,8 @@ public class AlbergoService(
     CameraService cameraService,
     PrenotazioneService prenotazioneService)
 {
-    private CameraService _cameraService = cameraService;
-    private PrenotazioneService _prenotazioneService = prenotazioneService;
+    private readonly CameraService _cameraService = cameraService;
+    private readonly PrenotazioneService _prenotazioneService = prenotazioneService;
 
     public void MenuPrincipale()
     {

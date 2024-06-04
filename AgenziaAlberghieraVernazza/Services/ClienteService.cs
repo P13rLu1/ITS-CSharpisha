@@ -5,15 +5,8 @@ using AziendaAlberghieraVernazza.Utils;
 
 namespace AziendaAlberghieraVernazza.Services;
 
-public class ClienteService
+public class ClienteService(ClienteStore clienteStore)
 {
-    private ClienteStore _clienteStore;
-    
-    public ClienteService(ClienteStore clienteStore)
-    {
-        _clienteStore = clienteStore;
-    }
-    
     public int InserisciNuovoCliente()
     {
         Console.WriteLine("\nInserisci i dati del nuovo cliente");
@@ -22,13 +15,13 @@ public class ClienteService
         do
         {
             Console.Write("Inserisci il nome del cliente: ");
-        } while (AlbergoUtils.CheckString(nome = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
+        } while (AlbergoUtils.CheckString(nome = Console.ReadLine()?.ToUpper(), "Il tipo non puó essere vuoto!"));
         
         string? cognome;
         do
         {
             Console.Write("Inserisci il cognome del cliente: ");
-        } while (AlbergoUtils.CheckString(cognome = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
+        } while (AlbergoUtils.CheckString(cognome = Console.ReadLine()?.ToUpper(), "Il tipo non puó essere vuoto!"));
         
         string? email;
         do
@@ -37,7 +30,7 @@ public class ClienteService
         } while (AlbergoUtils.CheckEmail(email = Console.ReadLine(), "Email non valida!"));
         
         var cliente = new Cliente(nome, cognome, email);
-        _clienteStore.Aggiungi(cliente);
+        clienteStore.Aggiungi(cliente);
         Console.WriteLine($"Cliente Aggiunto con successo! Id: {cliente.Id}");
         
         AlbergoUtils.PremiUnTastoPerContinuare();
@@ -47,7 +40,7 @@ public class ClienteService
 
     public int? SelezionaCliente()
     {
-        if (_clienteStore.Get().Count == 0)
+        if (clienteStore.Get().Count == 0)
         {
             Console.WriteLine("\nNessun cliente presente");
             AlbergoUtils.PremiUnTastoPerContinuare();
@@ -56,7 +49,7 @@ public class ClienteService
         
         var ricerca = AlbergoUtils.SearchCliente();
 
-        var cliente = _clienteStore.Get(ricerca);
+        var cliente = clienteStore.Get(ricerca);
         if (cliente == null)
         {
             Console.WriteLine("Cliente non trovato");
@@ -64,7 +57,7 @@ public class ClienteService
             return null;
         }
         
-        Console.WriteLine($"Cliente trovato: Nome:{cliente!.Nome}\nCognome:{cliente.Cognome}\n{cliente.Email}\nId: {cliente.Id}");
+        Console.WriteLine($"Cliente trovato: Nome:{cliente.Nome}\nCognome:{cliente.Cognome}\n{cliente.Email}\nId: {cliente.Id}");
         
         AlbergoUtils.PremiUnTastoPerContinuare();
         

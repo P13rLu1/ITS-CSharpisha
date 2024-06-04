@@ -1,20 +1,15 @@
 ﻿using System;
+using AziendaAlberghieraVernazza.Models;
 using AziendaAlberghieraVernazza.Stores;
 using AziendaAlberghieraVernazza.Utils;
 
 namespace AziendaAlberghieraVernazza.Services;
 
-public class PrenotazioneService
+public class PrenotazioneService(
+    PrenotazioneStore prenotazioneStore,
+    ClienteService clienteService,
+    CameraService cameraService)
 {
-    private PrenotazioneStore _prenotazioneStore;
-    private ClienteService _clienteService;
-    
-    public PrenotazioneService(PrenotazioneStore prenotazioneStore, ClienteService clienteService)
-    {
-        _prenotazioneStore = prenotazioneStore;
-        _clienteService = clienteService;
-    }
-    
     public void GestionePrenotazioni()
     {
         Console.WriteLine("\nGestione Prenotazioni");
@@ -45,7 +40,7 @@ public class PrenotazioneService
 
     private void VisualizzaPrenotazioni()
     {
-        if (_prenotazioneStore.Get().Count == 0)
+        if (prenotazioneStore.Get().Count == 0)
         {
             Console.WriteLine("\nNessuna prenotazione presente");
             AlbergoUtils.PremiUnTastoPerContinuare();
@@ -53,7 +48,7 @@ public class PrenotazioneService
         }
 
         Console.WriteLine("\nPrenotazioni:");
-        var prenotazioni = _prenotazioneStore.Get();
+        var prenotazioni = prenotazioneStore.Get();
         foreach (var prenotazione in prenotazioni)
         {
             Console.WriteLine(
@@ -64,36 +59,70 @@ public class PrenotazioneService
     private void AggiungiPrenotazione()
     {
         Console.WriteLine("Aggiungi Prenotazione");
-        string? scelta;
-        int? idCliente;
+
+        string? dataArrivo;
         do
         {
-            Console.Write("Vuoi inserire un nuovo cliente o selezionarne uno esistente? [nuovo/esistente]: ");
+            Console.Write("Inserisci la data di arrivo (yyyy-MM-dd): ");
+        } while (AlbergoUtils.CheckDate(dataArrivo = Console.ReadLine() ?? "", "Data non valida!"));
+
+        string? dataPartenza;
+        do
+        {
+            Console.Write("Inserisci la data di partenza (yyyy-MM-dd): ");
+        } while (AlbergoUtils.CheckDate(dataPartenza = Console.ReadLine() ?? "", "Data non valida!"));
+
+        var idCliente = RicavaIdCliente();
+
+        Console.Write("Inserisci il numero di letti che servono al cliente: ");
+        string? numeroLetti;
+        do
+        {
+            Console.Write("Inserisci il numero di letti che servono al cliente: ");
+        } while (AlbergoUtils.CheckInt(numeroLetti = Console.ReadLine() ?? "", "Il numero di letti non puó essere vuoto!"));
+
+        var camereDisponibili = cameraService.FiltraCamereDisponibili(DateOnly.Parse(dataArrivo), DateOnly.Parse(dataPartenza), int.Parse(numeroLetti)); // funzione che restituisce le camere disponibili in base ai parametri passati (data arrivo, data partenza, numero letti)
+        var idCamera = cameraService.SelezionaCamera(camereDisponibili); // funzione che restituisce l'id della camera selezionata dall'utente se presente, altrimenti null
+
+        if (idCamera == null)
+        {
+            Console.WriteLine("Nessuna camera disponibile per i criteri selezionati.");
+            return;
+        }
+
+        string? note;
+        do
+        {
+            Console.Write("Inserisci le note: ");
+        } while (AlbergoUtils.CheckString(note = Console.ReadLine() ?? "", "Le note non possono essere vuote!"));
+
+        var prenotazione = new Prenotazione(idCliente, idCamera.Value, DateOnly.Parse(dataArrivo), DateOnly.Parse(dataPartenza), note);
+        prenotazioneStore.Aggiungi(prenotazione);
+
+        Console.WriteLine("Prenotazione aggiunta con successo!");
+    }
+    
+    private int? RicavaIdCliente()
+    {
+        string? scelta;
+        int? idCliente = null;
+        do
+        {
+            Console.Write("Vuoi inserire un nuovo cliente o selezionarne uno esistente?\n1. Nuovo\n2. Esistente\nScelta: ");
             scelta = Console.ReadLine();
             switch (scelta)
             {
-                case "nuovo":
-                    idCliente = _clienteService.InserisciNuovoCliente();
+                case "1":
+                    idCliente = clienteService.InserisciNuovoCliente();
                     break;
-                case "esistente":
-                    idCliente = _clienteService.SelezionaCliente();
+                case "2":
+                    idCliente = clienteService.SelezionaCliente();
                     break;
                 default:
                     Console.WriteLine("Scelta non valida");
                     break;
             }
-        } while (scelta != "nuovo" && scelta != "esistente");
-        
-        // TODO Aggiungi prenotazione con la possibilitá di cercare la camera per l'idCamera
-        
-        
-        
-        // TODO Filtra camere in base al numero di letti e alle date richieste dal cliente
-        
-        
-        
-        
-        
-        // TODO FINALE Vedere se la camera selezionata é giá prenotata in quelle date
+        } while (scelta != "1" && scelta != "2");
+        return idCliente;
     }
 }

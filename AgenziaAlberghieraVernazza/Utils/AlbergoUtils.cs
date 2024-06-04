@@ -27,7 +27,7 @@ public static class AlbergoUtils
     
     internal static bool CheckDate(string? input, string message)
     {
-        if (DateTime.TryParse(input, out _)) return false;
+        if (DateOnly.TryParse(input, out _)) return false;
         Console.WriteLine(message);
         return true;
     }

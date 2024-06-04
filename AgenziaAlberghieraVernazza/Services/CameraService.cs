@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AziendaAlberghieraVernazza.Models;
 using AziendaAlberghieraVernazza.Stores;
 using AziendaAlberghieraVernazza.Utils;
@@ -7,7 +9,7 @@ namespace AziendaAlberghieraVernazza.Services;
 
 public class CameraService(CameraStore cameraStore)
 {
-    private CameraStore _cameraStore = cameraStore;
+    private readonly CameraStore _cameraStore = cameraStore;
     public void GestioneCamere()
     {
         Console.WriteLine("\nGestione Camere");
@@ -54,7 +56,7 @@ public class CameraService(CameraStore cameraStore)
         
         AlbergoUtils.PremiUnTastoPerContinuare();
     }
-    
+
     private void AggiungiCamera()
     {
         string? numero;
@@ -67,7 +69,7 @@ public class CameraService(CameraStore cameraStore)
         do
         {
             Console.Write("Inserisci il tipo della camera: ");
-        } while (AlbergoUtils.CheckString(tipo = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
+        } while (AlbergoUtils.CheckString(tipo = Console.ReadLine()?.ToUpper(), "Il tipo non puó essere vuoto!"));
         
         string? numeroLetti;
         do
@@ -93,5 +95,38 @@ public class CameraService(CameraStore cameraStore)
             ? "Camera cancellata con successo!"
             : "Camera non trovata!");
         AlbergoUtils.PremiUnTastoPerContinuare();
+    }
+    
+    public int? SelezionaCamera(List<Camera> camereDisponibili)
+    {
+        if (camereDisponibili.Count == 0)
+        {
+            Console.WriteLine("Nessuna camera disponibile per i criteri selezionati.");
+            return null;
+        }
+
+        Console.WriteLine("Camere disponibili:");
+        foreach (var camera in camereDisponibili)
+        {
+            Console.WriteLine($"Id: {camera.Id}, Numero Letti: {camera.NumeroLetti}");
+        }
+
+        Console.Write("Inserisci l'ID della camera desiderata: ");
+        int idCamera;
+        while (!int.TryParse(Console.ReadLine(), out idCamera) || camereDisponibili.All(c => c.Id != idCamera))
+        {
+            Console.WriteLine("ID non valido. Inserisci un ID valido: ");
+        }
+
+        return idCamera;
+    }
+    
+    public List<Camera> FiltraCamereDisponibili(DateOnly dataArrivo, DateOnly dataPartenza, int numeroLetti)
+    {
+        var tutteLeCamere = _cameraStore.Get(); // funzione che restituisce tutte le camere
+        var camereDisponibili = tutteLeCamere.Where(camera => camera.NumeroLetti == numeroLetti &&
+                                                              !_cameraStore.CameraOccupata(camera.Id, dataArrivo,
+                                                                  dataPartenza)).ToList();  //funzione che vede se le camere che ci stanno hanno il numero dei letti richiesti e se sono occupate in quella data richiamando la funzione CameraOccupata del CameraStore
+        return camereDisponibili;
     }
 }
