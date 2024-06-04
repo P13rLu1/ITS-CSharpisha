@@ -126,7 +126,7 @@ public class CameraService(CameraStore cameraStore)
         var tutteLeCamere = _cameraStore.Get(); // funzione che restituisce tutte le camere
         var camereDisponibili = tutteLeCamere.Where(camera => camera.NumeroLetti == numeroLetti &&
                                                               !_cameraStore.CameraOccupata(camera.Id, dataArrivo,
-                                                                  dataPartenza, prenotazioni)).ToList();  //funzione che vede se le camere che ci stanno hanno il numero dei letti richiesti e se sono occupate in quella data richiamando la funzione CameraOccupata del CameraStore
+                                                                  dataPartenza, prenotazioni)).ToList();// funzione che vede se le camere che ci stanno hanno il numero dei letti richiesti e se sono occupate in quella data richiamando la funzione CameraOccupata del CameraStore
         return camereDisponibili;
     }
 }
