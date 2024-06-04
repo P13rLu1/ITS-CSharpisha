@@ -113,7 +113,7 @@ public class CameraService(CameraStore cameraStore)
 
         Console.Write("Inserisci l'ID della camera desiderata: ");
         int idCamera;
-        while (!int.TryParse(Console.ReadLine(), out idCamera) || camereDisponibili.All(c => c.Id != idCamera))
+        while (!int.TryParse(Console.ReadLine(), out idCamera) || camereDisponibili.All(c => c.Id != idCamera)) // funzione che controlla se l'id inserito è valido tra le camere disponibili
         {
             Console.WriteLine("ID non valido. Inserisci un ID valido: ");
         }

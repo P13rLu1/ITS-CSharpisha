@@ -72,7 +72,7 @@ public class PrenotazioneService(
             Console.Write("Inserisci la data di partenza (yyyy-MM-dd): ");
         } while (AlbergoUtils.CheckDate(dataPartenza = Console.ReadLine() ?? "", "Data non valida!"));
 
-        int? idCliente = RicavaIdCliente();
+        int idCliente = RicavaIdCliente();
 
         Console.Write("Inserisci il numero di letti che servono al cliente: ");
         string? numeroLetti;
@@ -102,10 +102,10 @@ public class PrenotazioneService(
         Console.WriteLine("Prenotazione aggiunta con successo!");
     }
     
-    private int? RicavaIdCliente()
+    private int RicavaIdCliente()
     {
         string? scelta;
-        int? idCliente = null;
+        int idCliente = 0;
         do
         {
             Console.Write("Vuoi inserire un nuovo cliente o selezionarne uno esistente?\n1. Nuovo\n2. Esistente\nScelta: ");
