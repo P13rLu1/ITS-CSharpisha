@@ -85,6 +85,9 @@ public class PrenotazioneService
         } while (scelta != "nuovo" && scelta != "esistente");
         
         // TODO Aggiungi prenotazione con la possibilitá di cercare la camera per l'idCamera
+        
+        
+        
         // TODO Filtra camere in base al numero di letti e alle date richieste dal cliente
         
         

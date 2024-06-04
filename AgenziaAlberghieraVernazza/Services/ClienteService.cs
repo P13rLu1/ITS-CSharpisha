@@ -21,20 +21,20 @@ public class ClienteService
         string? nome;
         do
         {
-            Console.Write("Inserisci il tipo della camera: ");
+            Console.Write("Inserisci il nome del cliente: ");
         } while (AlbergoUtils.CheckString(nome = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
         
         string? cognome;
         do
         {
-            Console.Write("Inserisci il tipo della camera: ");
+            Console.Write("Inserisci il cognome del cliente: ");
         } while (AlbergoUtils.CheckString(cognome = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
         
         string? email;
         do
         {
-            Console.Write("Inserisci il tipo della camera: ");
-        } while (AlbergoUtils.CheckString(email = Console.ReadLine(), "Il tipo non puó essere vuoto!"));
+            Console.Write("Inserisci l'email del cliente: ");
+        } while (AlbergoUtils.CheckEmail(email = Console.ReadLine(), "Email non valida!"));
         
         var cliente = new Cliente(nome, cognome, email);
         _clienteStore.Aggiungi(cliente);

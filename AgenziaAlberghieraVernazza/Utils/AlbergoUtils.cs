@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace AziendaAlberghieraVernazza.Utils;
 
@@ -20,6 +21,20 @@ public static class AlbergoUtils
     internal static bool CheckInt(string? input, string message)
     {
         if (int.TryParse(input, out _)) return false;
+        Console.WriteLine(message);
+        return true;
+    }
+    
+    internal static bool CheckDate(string? input, string message)
+    {
+        if (DateTime.TryParse(input, out _)) return false;
+        Console.WriteLine(message);
+        return true;
+    }
+    
+    internal static bool CheckEmail(string? input, string message)
+    {
+        if (Regex.IsMatch(input ?? "", @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")) return false;
         Console.WriteLine(message);
         return true;
     }
