@@ -28,7 +28,7 @@ public class PrenotazioneService(
                     AggiungiPrenotazione();
                     break;
                 case 3:
-                    //CancellaPrenotazione();
+                    CancellaPrenotazione();
                     break;
                 case 0:
                     break;
@@ -125,5 +125,22 @@ public class PrenotazioneService(
             }
         } while (scelta != "1" && scelta != "2");
         return idCliente;
+    }
+    
+    private void CancellaPrenotazione()
+    {
+        if (prenotazioneStore.Get().Count == 0)
+        {
+            Console.WriteLine("\nNessuna prenotazione presente");
+            AlbergoUtils.PremiUnTastoPerContinuare();
+            return;
+        }
+
+        Console.WriteLine("\nCancella Prenotazione");
+        VisualizzaPrenotazioni();
+        Console.Write("Inserisci l'id della prenotazione da cancellare: ");
+        int idPrenotazione = int.Parse(Console.ReadLine() ?? "");
+        prenotazioneStore.Cancella(idPrenotazione);
+        Console.WriteLine("Prenotazione cancellata con successo!");
     }
 }
