@@ -59,19 +59,19 @@ public class CameraService(CameraStore cameraStore)
 
     private void AggiungiCamera()
     {
-        string? numero;
+        string numero;
         do
         {
             Console.Write("Inserisci il numero della camera: ");
         } while (AlbergoUtils.CheckInt(numero = Console.ReadLine()??"", "Il numero della camera non puó essere vuoto!"));
 
-        string? tipo;
+        string tipo;
         do
         {
             Console.Write("Inserisci il tipo della camera: ");
-        } while (AlbergoUtils.CheckString(tipo = Console.ReadLine()?.ToUpper(), "Il tipo non puó essere vuoto!"));
+        } while (AlbergoUtils.CheckString(tipo = Console.ReadLine()?.ToUpper() ?? "", "Il tipo non puó essere vuoto!"));
         
-        string? numeroLetti;
+        string numeroLetti;
         do
         {
             Console.Write("Inserisci il numero di letti della camera: ");

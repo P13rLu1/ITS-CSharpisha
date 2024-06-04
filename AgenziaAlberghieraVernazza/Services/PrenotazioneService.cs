@@ -72,7 +72,7 @@ public class PrenotazioneService(
             Console.Write("Inserisci la data di partenza (yyyy-MM-dd): ");
         } while (AlbergoUtils.CheckDate(dataPartenza = Console.ReadLine() ?? "", "Data non valida!"));
 
-        var idCliente = RicavaIdCliente();
+        int? idCliente = RicavaIdCliente();
 
         Console.Write("Inserisci il numero di letti che servono al cliente: ");
         string? numeroLetti;
