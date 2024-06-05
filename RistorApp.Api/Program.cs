@@ -1,10 +1,18 @@
+using System.Reflection;
 using RistorApp.DataLayer.Services;
 using RistorApp.DataLayer.Stores;
 
 namespace RistorApp.Api
 {
+    /// <summary>
+    /// Classe principale dell'applicazione
+    /// </summary>
     public abstract class Program
     {
+        /// <summary>
+        /// Funzione principale dell'applicazione
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +22,11 @@ namespace RistorApp.Api
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
 
             builder.Services.AddScoped<ClienteService>();
             builder.Services.AddSingleton<ClienteStore>();

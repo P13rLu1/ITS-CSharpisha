@@ -5,16 +5,23 @@ using System.Collections.Generic;
 
 namespace RistorApp.DataLayer.Services
 {
-    public class ClienteService(ClienteStore clienteStore)
+    public class ClienteService
     {
+        private ClienteStore _store;
+
+        public ClienteService(ClienteStore clienteStore) 
+        {
+            _store = clienteStore;
+        }
+
         public List<Cliente> Get()
         {
-            return clienteStore.Get();
+            return _store.Get();
         }
 
         public Cliente Get(int id)
         {
-            var clienteTrovato = clienteStore.Get(id);
+            var clienteTrovato = _store.Get(id);
             if (clienteTrovato == null)
             {
                 throw new Exception($"Cliente con id {id} non trovato");
@@ -22,21 +29,21 @@ namespace RistorApp.DataLayer.Services
             return clienteTrovato;
         }
 
-        public bool Create(string nome, string cognome, DateTime dataNascita)
+        public bool Create(ClienteCreateModel clienteDaCreare)
         {
-            var clienteDaAggiungere = new Cliente(nome.ToUpper(), cognome.ToUpper(), dataNascita);
-            clienteStore.Create(clienteDaAggiungere);
+            var clienteDaAggiungere = new Cliente(clienteDaCreare.Nome, clienteDaCreare.Cognome, clienteDaCreare.DataNascita ?? DateTime.MinValue);
+            _store.Create(clienteDaAggiungere);
             return true;
         }
 
         public bool Update(Cliente clienteDaModificare)
         {
-            return clienteStore.Update(clienteDaModificare);
+            return _store.Update(clienteDaModificare);
         }
 
         public bool Delete(int id)
         { 
-            return clienteStore.Delete(id);
+            return _store.Delete(id);
         }
     }
 }

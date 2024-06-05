@@ -28,7 +28,7 @@ namespace RistorApp.ConsoleApp.Controllers
             var cognome = Console.ReadLine();
             var dataNascita = DateTime.Parse(Console.ReadLine()??"");
 
-            _clienteService.Create(nome, cognome, dataNascita);
+            // _clienteService.Create(nome, cognome, dataNascita);
         }
     }
 }

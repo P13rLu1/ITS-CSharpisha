@@ -4,6 +4,10 @@ using RistorApp.DataLayer.Services;
 
 namespace RistorApp.Api.Controllers
 {
+    /// <summary>
+    /// Controller per la gestione dei tavoli
+    /// </summary>
+    /// <param name="tavoloService"></param>
     [ApiController]
     [Route("[controller]")]
     public class TavoloController(TavoloService tavoloService) : ControllerBase
@@ -14,6 +18,13 @@ namespace RistorApp.Api.Controllers
             return tavoloService.Get();
         }
 
+        /// <summary>
+        /// Questa funzione inserisce un nuovo tavolo
+        /// </summary>
+        /// <param name="numeroPersone"></param>
+        /// <param name="posizione"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost]
         public string Insert(int numeroPersone, string posizione) //questa funzione inserisce un nuovo tavolo
         {
@@ -26,6 +37,12 @@ namespace RistorApp.Api.Controllers
             throw new Exception("Si è verificato un errore");
         }
 
+        /// <summary>
+        /// Questa funzione fa un update di un tavolo esistente
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpDelete]
         public string Remove(int id) //questa funzione rimuove un tavolo
         {
