@@ -60,7 +60,7 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Questa funzione modifica un cliente esistente
+        /// Questa funzione modifica un cliente esistente (non va il check del range, chiedere come fare)
         /// </summary>
         /// <param name="clienteDaModificare"></param>
         /// <returns>Un messaggio di conferma dell'operazione</returns>

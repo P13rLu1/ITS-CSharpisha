@@ -50,7 +50,7 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Questa funzione modifica un tavolo esistente
+        /// Questa funzione modifica un tavolo esistente (non va il check del range, chiedere come fare)
         /// </summary>
         /// <param name="tavoloDaModificare"></param>
         /// <returns></returns>
