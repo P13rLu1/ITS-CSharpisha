@@ -17,6 +17,11 @@ namespace RistorApp.DataLayer.Services
             tavoloStore.Create(tavoloDaAggiungere);
             return true;
         }
+        
+        public bool Update(Tavolo tavoloDaModificare)
+        {
+            return tavoloStore.Update(tavoloDaModificare);
+        }
 
         public bool Delete(int id)
         {

@@ -7,7 +7,7 @@ namespace RistorApp.DataLayer.Stores
 {
     public class TavoloStore
     {
-        private readonly List<Tavolo> _tavoli =
+        private List<Tavolo> _tavoli =
         [
             new Tavolo(4, "Nord"),
             new Tavolo(2, "Sud"),
@@ -32,6 +32,17 @@ namespace RistorApp.DataLayer.Stores
         public bool Create(Tavolo tavoloDaAggiungere)
         {
             _tavoli.Add(tavoloDaAggiungere);
+            return true;
+        }
+        
+        public bool Update(Tavolo tavoloDaModificare)
+        {
+            var nuovaLista = new List<Tavolo>();
+            foreach (var tavolo in _tavoli)
+            {
+                nuovaLista.Add(tavolo.Id == tavoloDaModificare.Id ? tavoloDaModificare : tavolo);
+            }
+            _tavoli = nuovaLista; 
             return true;
         }
 

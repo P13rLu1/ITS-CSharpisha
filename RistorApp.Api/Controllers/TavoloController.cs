@@ -48,6 +48,32 @@ namespace RistorApp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        
+        /// <summary>
+        /// Questa funzione modifica un tavolo esistente
+        /// </summary>
+        /// <param name="tavoloDaModificare"></param>
+        /// <returns></returns>
+        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
+        [HttpPut]
+        public IActionResult Update(Tavolo tavoloDaModificare) 
+        {
+            try 
+            {
+                var esito = tavoloService.Update(tavoloDaModificare);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status202Accepted, "Tavolo modificato");
+                }
+
+                throw new Exception("Si è verificato un errore");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
         /// <summary>
         /// Questa funzione fa un update di un tavolo esistente
