@@ -22,20 +22,20 @@ namespace RistorApp.Api.Controllers
             return tavoloService.Get();
         }
 
+        
         /// <summary>
         /// Questa funzione inserisce un nuovo tavolo
         /// </summary>
-        /// <param name="numeroPersone"></param>
-        /// <param name="posizione"></param>
+        /// <param name="tavoloDaInserire"></param>
         /// <returns></returns>
         /// <response code="201">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPost]
-        public IActionResult Insert(int numeroPersone, string posizione) //questa funzione inserisce un nuovo tavolo
+        public IActionResult Insert(TavoloCreateModel tavoloDaInserire) //questa funzione inserisce un nuovo tavolo
         {
             try 
             {
-                var esito = tavoloService.Create(numeroPersone, posizione);
+                var esito = tavoloService.Create(tavoloDaInserire);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status201Created, "Tavolo inserito");

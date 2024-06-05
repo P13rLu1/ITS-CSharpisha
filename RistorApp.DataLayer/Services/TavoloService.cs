@@ -11,9 +11,9 @@ namespace RistorApp.DataLayer.Services
             return tavoloStore.Get();
         }
 
-        public bool Create(int numeroPersone, string posizione)
+        public bool Create(TavoloCreateModel tavoloDaInserire)
         {
-            var tavoloDaAggiungere = new Tavolo(numeroPersone, posizione);
+            var tavoloDaAggiungere = new Tavolo(tavoloDaInserire.NumeroPersone, tavoloDaInserire.Posizione);
             tavoloStore.Create(tavoloDaAggiungere);
             return true;
         }

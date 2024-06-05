@@ -44,36 +44,46 @@ namespace RistorApp.Api.Controllers
         }
 
         /// <summary>
-        /// Questa funzione inserisce una nuova prenotazione
+        /// Inserisce una nuova prenotazione.
         /// </summary>
-        /// <param name="idCliente"></param>
-        /// <param name="idTavolo"></param>
-        /// <param name="dataPrenotazione"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="idCliente">Il codice identificativo univoco del cliente.</param>
+        /// <param name="idTavolo">Il codice identificativo univoco del tavolo.</param>
+        /// <param name="dataPrenotazione">La data della prenotazione.</param>
+        /// <returns>Un messaggio che conferma l'avvenuta creazione della prenotazione.</returns>
+        /// <response code="201">Ritorna un messaggio di conferma della creazione della prenotazione.</response>
+        /// <response code="404">Se il cliente con l'id in input non esiste.</response>
+        /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
+        /// <response code="500">Se si è verificato un errore non previsto.</response>
         [HttpPost]
-        public string Insert(int idCliente, int idTavolo, DateTime dataPrenotazione) //questa funzione inserisce una nuova prenotazione
+        public IActionResult Insert(int idCliente, int idTavolo, DateTime dataPrenotazione)
         {
-            if (clienteService.Get(idCliente) == null)
+            try
             {
-                throw new Exception($"Cliente {idCliente} non trovato");
+                if (clienteService.Get(idCliente) == null!)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, $"Cliente {idCliente} non trovato");
+                }
+
+                var coincidenze = prenotazioneService.Get(dataPrenotazione);
+                var occupato = coincidenze.Any(c => c.IdTavolo == idTavolo);
+
+                if (occupato)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, $"Tavolo {idTavolo} non disponibile per {dataPrenotazione.ToShortDateString()}");
+                }
+
+                var esito = prenotazioneService.Create(idCliente, idTavolo, dataPrenotazione);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status201Created, "Prenotazione inserita");
+                }
+
+                throw new Exception("Si è verificato un errore");
             }
-
-            var coincidenze = prenotazioneService.Get(dataPrenotazione);
-            var occupato = coincidenze.Any(c => c.IdTavolo == idTavolo);
-
-            if (occupato)
+            catch (Exception ex)
             {
-                throw new Exception($"Tavolo {idTavolo} non disponibile per {dataPrenotazione.ToShortDateString}");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-            var esito = prenotazioneService.Create(idCliente, idTavolo, dataPrenotazione);
-            if (esito)
-            {
-                return "Prenotazione inserita";
-            }
-
-            throw new Exception("Si è verificato un errore");
         }
 
         /// <summary>

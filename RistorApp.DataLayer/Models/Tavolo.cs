@@ -1,4 +1,6 @@
-﻿namespace RistorApp.DataLayer.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RistorApp.DataLayer.Models;
 
 public class Tavolo
 {
@@ -11,6 +13,7 @@ public class Tavolo
 
     public int Id { get; set; }
     private static int _contatore = 1;
+    
     public int NumeroPersone { get; set; }
     public string Posizione { get; set; }
 }

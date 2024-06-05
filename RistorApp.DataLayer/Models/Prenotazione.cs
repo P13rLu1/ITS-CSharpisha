@@ -20,7 +20,7 @@ namespace RistorApp.DataLayer.Models
         public int IdCliente { get; set; }
 
         public int IdTavolo { get; set; }
-
+        
         public DateTime Data { get; set; }
     }
 }
