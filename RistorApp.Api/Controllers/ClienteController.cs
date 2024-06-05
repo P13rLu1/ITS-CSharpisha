@@ -58,22 +58,31 @@ namespace RistorApp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        
         /// <summary>
-        /// Questa funzione modifica un cliente esistente
+        /// 
         /// </summary>
         /// <param name="clienteDaModificare"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>Un messaggio di conferma dell'operazione</returns>
+        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPut] 
-        public string Update(Cliente clienteDaModificare) //questa funzione fa un update di un cliente esistente
+        public IActionResult Update(Cliente clienteDaModificare) //questa funzione fa un update di un cliente esistente
         {
-            var esito = clienteService.Update(clienteDaModificare);
-            if (esito)
+            try 
             {
-                return "Cliente aggiornato";
-            }
+                var esito = clienteService.Update(clienteDaModificare);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status202Accepted, "Cliente modificato correttamente");
+                }
 
-            throw new Exception("Si è verificato un errore");
+                throw new Exception("Cliente non presente nel database");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
@@ -81,17 +90,25 @@ namespace RistorApp.Api.Controllers
         /// </summary>
         /// <param name="id">l'id del cliente da eliminare</param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpDelete("{id}")]
-        public string Remove(int id) //questa funzione rimuove un cliente in base all'id
+        public IActionResult Remove(int id) //questa funzione rimuove un cliente in base all'id
         {
-            var esito = clienteService.Delete(id);
-            if (esito)
+            try 
             {
-                return "Cliente rimosso";
-            }
+                var esito = clienteService.Delete(id);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status202Accepted, "Cliente eliminato correttamente");
+                }
 
-            throw new Exception("Cliente non presente nel database");
+                throw new Exception("Cliente non presente nel database");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

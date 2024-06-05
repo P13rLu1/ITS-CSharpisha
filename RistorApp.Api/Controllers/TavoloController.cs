@@ -12,6 +12,10 @@ namespace RistorApp.Api.Controllers
     [Route("[controller]")]
     public class TavoloController(TavoloService tavoloService) : ControllerBase
     {
+        /// <summary>
+        /// Questa funzione restituisce tutti i tavoli
+        /// </summary>
+        /// <returns></returns>
         [HttpGet] 
         public IEnumerable<Tavolo> Get() //questa funzione restituisce tutti i tavoli
         {
@@ -24,17 +28,25 @@ namespace RistorApp.Api.Controllers
         /// <param name="numeroPersone"></param>
         /// <param name="posizione"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <response code="201">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPost]
-        public string Insert(int numeroPersone, string posizione) //questa funzione inserisce un nuovo tavolo
+        public IActionResult Insert(int numeroPersone, string posizione) //questa funzione inserisce un nuovo tavolo
         {
-            var esito = tavoloService.Create(numeroPersone, posizione);
-            if (esito)
+            try 
             {
-                return "Tavolo inserito";
-            }
+                var esito = tavoloService.Create(numeroPersone, posizione);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status201Created, "Tavolo inserito");
+                }
 
-            throw new Exception("Si è verificato un errore");
+                throw new Exception("Si è verificato un errore");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
@@ -42,17 +54,25 @@ namespace RistorApp.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpDelete]
-        public string Remove(int id) //questa funzione rimuove un tavolo
+        public  IActionResult Remove(int id) //questa funzione rimuove un tavolo
         {
-            var esito = tavoloService.Delete(id);
-            if (esito)
+            try 
             {
-                return "Cliente rimosso";
-            }
+                var esito = tavoloService.Delete(id);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status202Accepted, "Tavolo rimosso");
+                }
 
-            throw new Exception("Tavolo non presente nel database");
+                throw new Exception("Si è verificato un errore");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

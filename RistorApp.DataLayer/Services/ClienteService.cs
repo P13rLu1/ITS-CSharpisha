@@ -31,7 +31,7 @@ namespace RistorApp.DataLayer.Services
 
         public bool Create(ClienteCreateModel clienteDaCreare)
         {
-            var clienteDaAggiungere = new Cliente(clienteDaCreare.Nome, clienteDaCreare.Cognome, clienteDaCreare.DataNascita ?? DateTime.MinValue);
+            var clienteDaAggiungere = new Cliente(clienteDaCreare.Nome.ToUpper(), clienteDaCreare.Cognome.ToUpper(), clienteDaCreare.DataNascita ?? DateTime.MinValue);
             _store.Create(clienteDaAggiungere);
             return true;
         }
