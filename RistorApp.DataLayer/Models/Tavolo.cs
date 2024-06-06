@@ -14,6 +14,7 @@ public class Tavolo
     public int Id { get; set; }
     private static int _contatore = 1;
     
+    [Range(1, 10, ErrorMessage = "Il numero di persone deve essere compreso tra 1 e 10.")] 
     public int NumeroPersone { get; set; }
     public string Posizione { get; set; }
 }

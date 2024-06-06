@@ -60,11 +60,11 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Questa funzione modifica un cliente esistente (non va il check del range, chiedere come fare)
+        /// Questa funzione modifica un cliente esistente
         /// </summary>
-        /// <param name="clienteDaModificare"></param>
+        /// <param name="clienteDaModificare">Variabile Cliente Da Modificare</param>
         /// <returns>Un messaggio di conferma dell'operazione</returns>
-        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPut] 
         public IActionResult Update(Cliente clienteDaModificare) //questa funzione fa un update di un cliente esistente
@@ -74,7 +74,7 @@ namespace RistorApp.Api.Controllers
                 var esito = clienteService.Update(clienteDaModificare);
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status202Accepted, "Cliente modificato correttamente");
+                    return StatusCode(StatusCodes.Status200OK, "Cliente modificato correttamente");
                 }
 
                 throw new Exception("Cliente non presente nel database");
@@ -90,7 +90,7 @@ namespace RistorApp.Api.Controllers
         /// </summary>
         /// <param name="id">l'id del cliente da eliminare</param>
         /// <returns></returns>
-        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpDelete("{id}")]
         public IActionResult Remove(int id) //questa funzione rimuove un cliente in base all'id
@@ -100,7 +100,7 @@ namespace RistorApp.Api.Controllers
                 var esito = clienteService.Delete(id);
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status202Accepted, "Cliente eliminato correttamente");
+                    return StatusCode(StatusCodes.Status200OK, "Cliente eliminato correttamente");
                 }
 
                 throw new Exception("Cliente non presente nel database");

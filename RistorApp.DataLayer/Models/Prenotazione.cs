@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RistorApp.DataLayer.Models
 {
@@ -21,6 +23,6 @@ namespace RistorApp.DataLayer.Models
 
         public int IdTavolo { get; set; }
         
-        public DateTime Data { get; set; }
+        [Required, DefaultValue(null)]public DateTime Data { get; set; }
     }
 }

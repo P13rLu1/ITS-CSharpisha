@@ -50,11 +50,11 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Questa funzione modifica un tavolo esistente (non va il check del range, chiedere come fare)
+        /// Questa funzione modifica un tavolo esistente
         /// </summary>
         /// <param name="tavoloDaModificare"></param>
         /// <returns></returns>
-        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPut]
         public IActionResult Update(Tavolo tavoloDaModificare) 
@@ -64,7 +64,7 @@ namespace RistorApp.Api.Controllers
                 var esito = tavoloService.Update(tavoloDaModificare);
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status202Accepted, "Tavolo modificato");
+                    return StatusCode(StatusCodes.Status200OK, "Tavolo modificato");
                 }
 
                 throw new Exception("Si è verificato un errore");
@@ -80,7 +80,7 @@ namespace RistorApp.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        /// <response code="202">Ritorna un messaggio di conferma</response>
+        /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpDelete]
         public  IActionResult Remove(int id) //questa funzione rimuove un tavolo
@@ -90,7 +90,7 @@ namespace RistorApp.Api.Controllers
                 var esito = tavoloService.Delete(id);
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status202Accepted, "Tavolo rimosso");
+                    return StatusCode(StatusCodes.Status200OK, "Tavolo rimosso");
                 }
 
                 throw new Exception("Si è verificato un errore");
