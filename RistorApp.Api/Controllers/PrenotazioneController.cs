@@ -22,10 +22,19 @@ namespace RistorApp.Api.Controllers
         /// Questa funzione restituisce tutte le prenotazioni
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IEnumerable<Prenotazione> Get() //questa funzione restituisce tutte le prenotazioni
+        /// <response code="200">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
+        [HttpGet, ProducesResponseType(typeof(List<Prenotazione>), 200), ProducesResponseType(typeof(string), 500)]
+        public IActionResult Get() //questa funzione restituisce tutte le prenotazioni
         {
-            return prenotazioneService.Get();
+            try
+            {
+                return StatusCode(StatusCodes.Status200OK, prenotazioneService.Get());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
@@ -34,13 +43,23 @@ namespace RistorApp.Api.Controllers
         /// <param name="postiDesiderati">variabile per i posti desiderati</param>
         /// <param name="dataPrenotazione">variabile per la data di prenotazione</param>
         /// <returns></returns>
-        [HttpGet("tavoli-disponibili")] //questa funzione restituisce i tavoli disponibili in base al numero di posti desiderati e alla data della prenotazione
-        public IEnumerable<Tavolo> GetTavoliDisponibili(int postiDesiderati, DateTime dataPrenotazione)
+        /// <response code="200">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
+        [HttpGet("tavoli-disponibili"), ProducesResponseType(typeof(List<Tavolo>), 200), ProducesResponseType(typeof(string), 500)]
+        public IActionResult GetTavoliDisponibili(int postiDesiderati, DateTime dataPrenotazione)
         {
-            var coincidenze = prenotazioneService.Get(dataPrenotazione);
-            return tavoloService.Get().Where(t =>
-                t.NumeroPersone >= postiDesiderati &&
-                coincidenze.Any(c => c.IdTavolo == t.Id) == false).ToList();
+            try
+            {
+                var tavoli = tavoloService.Get();
+                var prenotazioni = prenotazioneService.Get(dataPrenotazione);
+                var tavoliOccupati = prenotazioni.Select(p => p.IdTavolo).Distinct();
+                var tavoliDisponibili = tavoli.Where(t => !tavoliOccupati.Contains(t.Id) && t.NumeroPersone >= postiDesiderati);
+                return StatusCode(StatusCodes.Status200OK, tavoliDisponibili);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
@@ -54,7 +73,7 @@ namespace RistorApp.Api.Controllers
         /// <response code="404">Se il cliente con l'id in input non esiste.</response>
         /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
         /// <response code="500">Se si è verificato un errore non previsto.</response>
-        [HttpPost]
+        [HttpPost, ProducesResponseType(typeof(string), 201), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 409), ProducesResponseType(typeof(string), 500)]
         public IActionResult Insert(int idCliente, int idTavolo, DateTime dataPrenotazione)
         {
             try
@@ -98,7 +117,7 @@ namespace RistorApp.Api.Controllers
         /// <response code="404">Se il cliente con l'id in input non esiste.</response>
         /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
         /// <response code="500">Se si è verificato un errore non previsto.</response>
-        [HttpPut]
+        [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 409), ProducesResponseType(typeof(string), 500)]
         public IActionResult Update(int id, int idCliente, int idTavolo, DateTime dataPrenotazione)
         {
             try
@@ -134,7 +153,7 @@ namespace RistorApp.Api.Controllers
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="404">Se la prenotazione con l'id in input non esiste</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpDelete]
+        [HttpDelete, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
         public IActionResult Remove(int id)
         {
             try

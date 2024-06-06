@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RistorApp.DataLayer.Models;
-using RistorApp.DataLayer.Services;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Scheletro.DataLayer.Models;
+using Scheletro.DataLayer.Services;
 
-namespace RistorApp.Api.Controllers
+namespace Scheletro.Api.Controllers
 {
     /// <summary>
     /// Controller per la gestione dei clienti
     /// </summary>
-    /// <param name="clienteService">Controller per la gestione dei clienti</param>
+    /// <param name="modello1Service">Controller per la gestione dei del modello1</param>
     [ApiController]
     [Route("[controller]")]
-    public class ClienteController(ClienteService clienteService) : ControllerBase
+    public class Modello1Controller(Modello1Service modello1Service) : ControllerBase
     {
         /// <summary>
         /// Questa funzione restituisce tutti i clienti presenti nel database
@@ -18,12 +21,12 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpGet, ProducesResponseType(typeof(List<Cliente>), 200), ProducesResponseType(typeof(string), 500)]
+        [HttpGet, ProducesResponseType(typeof(List<Modello1>), 200), ProducesResponseType(typeof(string), 500)]
         public IActionResult Get()
         {
             try
             {
-                return StatusCode(StatusCodes.Status200OK, clienteService.Get());
+                return StatusCode(StatusCodes.Status200OK, modello1Service.Get());
             }
             catch (Exception ex)
             {
@@ -38,12 +41,12 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpGet("{id}"), ProducesResponseType(typeof(List<Cliente>), 200), ProducesResponseType(typeof(string), 500)]
+        [HttpGet("{id}"), ProducesResponseType(typeof(List<Modello1>), 200), ProducesResponseType(typeof(string), 500)]
         public IActionResult GetById([FromRoute] int id)
         {
             try
             {
-                return StatusCode(StatusCodes.Status200OK, clienteService.Get(id));
+                return StatusCode(StatusCodes.Status200OK, modello1Service.Get(id));
             }
             catch (Exception ex)
             {
@@ -54,16 +57,16 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Permette l'inserimento di un nuovo cliente
         /// </summary>
-        /// <param name="clienteDaInserire">I dati del cliente da inserire</param>
+        /// <param name="modello1DaInserire">I dati del modello da inserire</param>
         /// <returns>Un messaggio di conferma dell'operazione</returns>
         /// <response code="201">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPost, ProducesResponseType(typeof(string), 201), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Insert(ClienteCreateModel clienteDaInserire)
+        public IActionResult Insert(Modello1CreateModel modello1DaInserire)
         {
             try
             {
-                var esito = clienteService.Create(clienteDaInserire);
+                var esito = modello1Service.Create(modello1DaInserire);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status201Created, "Cliente inserito");
@@ -80,16 +83,16 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione modifica un cliente esistente
         /// </summary>
-        /// <param name="clienteDaModificare">Variabile Cliente Da Modificare</param>
+        /// <param name="modello1DaModificare">Variabile Modello Da Modificare</param>
         /// <returns>Un messaggio di conferma dell'operazione</returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Update(Cliente clienteDaModificare) //questa funzione fa un update di un cliente esistente
+        public IActionResult Update(Modello1 modello1DaModificare) //questa funzione fa un update di un cliente esistente
         {
             try
             {
-                var esito = clienteService.Update(clienteDaModificare);
+                var esito = modello1Service.Update(modello1DaModificare);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status200OK, "Cliente modificato correttamente");
@@ -115,7 +118,7 @@ namespace RistorApp.Api.Controllers
         {
             try
             {
-                var esito = clienteService.Delete(id);
+                var esito = modello1Service.Delete(id);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status200OK, "Cliente eliminato correttamente");

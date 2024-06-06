@@ -16,10 +16,19 @@ namespace RistorApp.Api.Controllers
         /// Questa funzione restituisce tutti i tavoli
         /// </summary>
         /// <returns></returns>
-        [HttpGet] 
-        public IEnumerable<Tavolo> Get() //questa funzione restituisce tutti i tavoli
+        /// <response code="200">Ritorna un messaggio di conferma</response>
+        /// <response code="500">Se si è verificato un errore non previsto</response>
+        [HttpGet, ProducesResponseType(typeof(List<Tavolo>), 200), ProducesResponseType(typeof(string), 500)] 
+        public IActionResult Get() //questa funzione restituisce tutti i tavoli
         {
-            return tavoloService.Get();
+            try
+            {
+                return StatusCode(StatusCodes.Status200OK, tavoloService.Get());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         
@@ -30,7 +39,7 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="201">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpPost]
+        [HttpPost, ProducesResponseType(typeof(string), 201), ProducesResponseType(typeof(string), 500)]
         public IActionResult Insert(TavoloCreateModel tavoloDaInserire) //questa funzione inserisce un nuovo tavolo
         {
             try 
@@ -56,7 +65,7 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpPut]
+        [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
         public IActionResult Update(Tavolo tavoloDaModificare) 
         {
             try 
@@ -82,7 +91,7 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpDelete]
+        [HttpDelete, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
         public  IActionResult Remove(int id) //questa funzione rimuove un tavolo
         {
             try 
