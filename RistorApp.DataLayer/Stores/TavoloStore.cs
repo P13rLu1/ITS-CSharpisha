@@ -24,7 +24,7 @@ namespace RistorApp.DataLayer.Stores
             return _tavoli;
         }
 
-        public Tavolo? Get(int id)
+        private Tavolo? Get(int id)
         {
             return _tavoli.FirstOrDefault(tavolo => tavolo.Id == id);
         }

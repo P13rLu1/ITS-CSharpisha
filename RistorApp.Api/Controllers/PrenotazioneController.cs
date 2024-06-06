@@ -85,6 +85,46 @@ namespace RistorApp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        
+        /// <summary>
+        /// Aggiorna la prenotazione con i dati in input
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="idCliente"></param>
+        /// <param name="idTavolo"></param>
+        /// <param name="dataPrenotazione"></param>
+        /// <returns></returns>
+        /// <response code="200">Ritorna un messaggio di conferma della creazione della prenotazione.</response>
+        /// <response code="404">Se il cliente con l'id in input non esiste.</response>
+        /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
+        /// <response code="500">Se si è verificato un errore non previsto.</response>
+        [HttpPut]
+        public IActionResult Update(int id, int idCliente, int idTavolo, DateTime dataPrenotazione)
+        {
+            try
+            {
+
+                var coincidenze = prenotazioneService.Get(dataPrenotazione);
+                var occupato = coincidenze.Any(c => c.IdTavolo == idTavolo && c.Id != id);
+
+                if (occupato)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, $"Tavolo {idTavolo} non disponibile per {dataPrenotazione.ToShortDateString()}");
+                }
+
+                var esito = prenotazioneService.Update(id, idCliente, idTavolo, dataPrenotazione);
+                if (esito)
+                {
+                    return StatusCode(StatusCodes.Status200OK, "Prenotazione aggiornata");
+                }
+
+                throw new Exception("Si è verificato un errore");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
         /// <summary>
         /// Elimina la prenotazione (se presente)

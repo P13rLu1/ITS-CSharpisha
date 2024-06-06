@@ -18,7 +18,7 @@ namespace RistorApp.DataLayer.Services
             return prenotazioneStore.Get().Where(p => p.Data.Date == dataPrenotazione.Date).ToList();
         }
 
-        public Prenotazione Get(int id)
+        private Prenotazione Get(int id)
         {
             var prenotazioneTrovata = prenotazioneStore.Get(id);
             if (prenotazioneTrovata == null)
@@ -33,6 +33,16 @@ namespace RistorApp.DataLayer.Services
             var prenotazioneDaAggiungere = new Prenotazione(idCliente, idTavolo, dataPrenotazione);
             prenotazioneStore.Create(prenotazioneDaAggiungere);
             return true;
+        }
+        
+        public bool Update(int id, int idCliente, int idTavolo, DateTime dataPrenotazione)
+        {
+            var prenotazioneEsistente = Get(id);
+            prenotazioneEsistente.IdCliente = idCliente;
+            prenotazioneEsistente.IdTavolo = idTavolo;
+            prenotazioneEsistente.Data = dataPrenotazione;
+
+            return prenotazioneStore.Update(prenotazioneEsistente);
         }
 
         public bool Delete(int id)

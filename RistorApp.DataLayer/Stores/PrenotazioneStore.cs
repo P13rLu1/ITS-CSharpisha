@@ -29,6 +29,17 @@ namespace RistorApp.DataLayer.Stores
             _prenotazioni.Add(prenotazioneDaAggiungere);
             return true;
         }
+        
+        public bool Update(Prenotazione prenotazioneDaAggiornare)
+        {
+            var index = _prenotazioni.Where( p => p.Id == prenotazioneDaAggiornare.Id).Select((_, i) => i).FirstOrDefault();
+            if (index >= 0)
+            {
+                _prenotazioni[index] = prenotazioneDaAggiornare;
+                return true;
+            }
+            return false;
+        }
 
         public bool Delete(int id)
         {
