@@ -7,7 +7,7 @@ namespace RistorApp.Api.Controllers
     /// <summary>
     /// Controller per la gestione dei tavoli
     /// </summary>
-    /// <param name="tavoloService"></param>
+    /// <param name="tavoloService">utilizzo della classe tavoloservice</param>
     [ApiController]
     [Route("[controller]")]
     public class TavoloController(TavoloService tavoloService) : ControllerBase
@@ -26,7 +26,7 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione inserisce un nuovo tavolo
         /// </summary>
-        /// <param name="tavoloDaInserire"></param>
+        /// <param name="tavoloDaInserire">Oggetto del tavolo da inserire</param>
         /// <returns></returns>
         /// <response code="201">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
@@ -52,7 +52,7 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione modifica un tavolo esistente
         /// </summary>
-        /// <param name="tavoloDaModificare"></param>
+        /// <param name="tavoloDaModificare">oggetto del tavolo da modificare</param>
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
@@ -78,7 +78,7 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione fa un update di un tavolo esistente
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id del tavolo da rimuovere</param>
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>

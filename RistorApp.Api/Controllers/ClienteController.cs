@@ -25,7 +25,7 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione restituisce un cliente in base all'id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id che si vuole cercare</param>
         /// <returns></returns>
         [HttpGet("{id}")]
         public Cliente GetById([FromRoute] int id)

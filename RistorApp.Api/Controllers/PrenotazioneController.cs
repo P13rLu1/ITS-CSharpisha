@@ -7,9 +7,9 @@ namespace RistorApp.Api.Controllers
     /// <summary>
     /// Controller per la gestione delle prenotazioni
     /// </summary>
-    /// <param name="prenotazioneService"></param>
-    /// <param name="clienteService"></param>
-    /// <param name="tavoloService"></param>
+    /// <param name="prenotazioneService">classe dove faccio tutte le operazioni per le prenotazioni</param>
+    /// <param name="clienteService">classe dove faccio tutte le operazioni per le clienti</param>
+    /// <param name="tavoloService">classe dove faccio tutte le operazioni per le tavoli</param>
     [ApiController]
     [Route("[controller]")]
     public class PrenotazioneController(
@@ -31,8 +31,8 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Questa funzione restituisce se ci sono tavoli disponibili in base al numero di posti desiderati e alla data della prenotazione
         /// </summary>
-        /// <param name="postiDesiderati"></param>
-        /// <param name="dataPrenotazione"></param>
+        /// <param name="postiDesiderati">variabile per i posti desiderati</param>
+        /// <param name="dataPrenotazione">variabile per la data di prenotazione</param>
         /// <returns></returns>
         [HttpGet("tavoli-disponibili")] //questa funzione restituisce i tavoli disponibili in base al numero di posti desiderati e alla data della prenotazione
         public IEnumerable<Tavolo> GetTavoliDisponibili(int postiDesiderati, DateTime dataPrenotazione)
@@ -89,10 +89,10 @@ namespace RistorApp.Api.Controllers
         /// <summary>
         /// Aggiorna la prenotazione con i dati in input
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="idCliente"></param>
-        /// <param name="idTavolo"></param>
-        /// <param name="dataPrenotazione"></param>
+        /// <param name="id">id della prenotazione</param>
+        /// <param name="idCliente">id del cliente della nuova prenotazione</param>
+        /// <param name="idTavolo">id del tavolo della nuova prenotazione</param>
+        /// <param name="dataPrenotazione">dalla della nuova prenotazione</param>
         /// <returns></returns>
         /// <response code="200">Ritorna un messaggio di conferma della creazione della prenotazione.</response>
         /// <response code="404">Se il cliente con l'id in input non esiste.</response>
