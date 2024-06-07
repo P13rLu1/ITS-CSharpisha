@@ -1,48 +1,52 @@
 ﻿using RistorApp.DataLayer.Models;
-using RistorApp.DataLayer.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Services
 {
-    public class PrenotazioneService(PrenotazioneStore prenotazioneStore)
+    public class PrenotazioneService(
+        IPrenotazioneStore prenotazioneStore,
+        ClienteService clienteService,
+        TavoloService tavoloService)
     {
         public List<Prenotazione> Get()
         {
             return prenotazioneStore.Get();
         }
-
+        
         public List<Prenotazione> Get(DateTime dataPrenotazione)
         {
             return prenotazioneStore.Get().Where(p => p.Data.Date == dataPrenotazione.Date).ToList();
         }
 
-        private Prenotazione Get(int id)
+        public Prenotazione Get(int id)
         {
-            var prenotazioneTrovata = prenotazioneStore.Get(id);
-            if (prenotazioneTrovata == null)
+            return prenotazioneStore.Get(id);
+        }
+
+        public bool Create(PrenotazioneCreateModel payload)
+        {
+            clienteService.Get(payload.IdCliente); // Force throw when needed
+
+            List<Prenotazione> coincidenze = Get(payload.Data);
+            List<Tavolo> disponibili = [..tavoloService.Get(coincidenze, payload.PostiDesiderati)
+                .OrderBy(t => t.NumeroPersone)];
+
+            if (disponibili.Count < 1)
             {
-                throw new Exception($"Prenotazione con id {id} non trovata");
+                throw new Exception($"Nessun tavolo disponibile da {payload.PostiDesiderati} posti in data {payload.Data.ToShortDateString()}");
             }
-            return prenotazioneTrovata;
+
+            Prenotazione prenotazioneDaAggiungere = new Prenotazione(payload.IdCliente,payload.IdTavolo,payload.Data);
+            
+            return prenotazioneStore.Create(prenotazioneDaAggiungere);
         }
 
-        public bool Create(int idCliente, int idTavolo, DateTime dataPrenotazione)
+        public bool Update(PrenotazioneCreateModel nuovaVersione)
         {
-            var prenotazioneDaAggiungere = new Prenotazione(idCliente, idTavolo, dataPrenotazione);
-            prenotazioneStore.Create(prenotazioneDaAggiungere);
-            return true;
-        }
-        
-        public bool Update(int id, int idCliente, int idTavolo, DateTime dataPrenotazione)
-        {
-            var prenotazioneEsistente = Get(id);
-            prenotazioneEsistente.IdCliente = idCliente;
-            prenotazioneEsistente.IdTavolo = idTavolo;
-            prenotazioneEsistente.Data = dataPrenotazione;
-
-            return prenotazioneStore.Update(prenotazioneEsistente);
+            return prenotazioneStore.Update(nuovaVersione);
         }
 
         public bool Delete(int id)

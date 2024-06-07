@@ -1,26 +1,36 @@
 ﻿using RistorApp.DataLayer.Models;
-using RistorApp.DataLayer.Stores;
 using System.Collections.Generic;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Services
 {
-    public class TavoloService(TavoloStore tavoloStore)
+    public class TavoloService(ITavoloStore tavoloStore)
     {
         public List<Tavolo> Get()
         {
             return tavoloStore.Get();
         }
 
-        public bool Create(TavoloCreateModel tavoloDaInserire)
+        public Tavolo Get(int id)
         {
-            var tavoloDaAggiungere = new Tavolo(tavoloDaInserire.NumeroPersone, tavoloDaInserire.Posizione);
-            tavoloStore.Create(tavoloDaAggiungere);
-            return true;
+            return tavoloStore.Get(id);
         }
         
-        public bool Update(Tavolo tavoloDaModificare)
+        public List<Tavolo> Get(List<Prenotazione> coincidenze, int postiDesiderati)
         {
-            return tavoloStore.Update(tavoloDaModificare);
+            return tavoloStore.Get(coincidenze, postiDesiderati);
+        }
+
+        public bool Create(TavoloCreateModel payload)
+        {
+            var tavoloDaAggiungere = new Tavolo(payload.NumeroPersone, payload.Posizione);
+
+            return tavoloStore.Create(tavoloDaAggiungere);
+        }
+
+        public bool Update(TavoloCreateModel nuovaVersione)
+        {
+            return tavoloStore.Update(nuovaVersione);
         }
 
         public bool Delete(int id)

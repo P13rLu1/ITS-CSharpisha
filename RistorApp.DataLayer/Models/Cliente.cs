@@ -1,26 +1,20 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RistorApp.DataLayer.Models;
 
-public class Cliente
+[Table("cliente")]
+public class Cliente(string nome, string cognome, DateTime dataNascita)
 {
-    public Cliente(string nome, string cognome, DateTime dataNascita)
-    {
-        Nome = nome;
-        Cognome = cognome;
-        DataNascita = dataNascita;
-        Id = _contatore++;
-    }
+    // Id = _contatore++;
 
-    public int Id { get; set; } 
-    private static int _contatore = 1;
+    [Key, Column("id")]public int Id { get; set; } 
+    // private static int _contatore = 1;
 
-    [StringLength(20, ErrorMessage = "Il nome non può avere più di 20 caratteri.")]
-    public string Nome { get; set; }
+    [Required, Column("nome"), MaxLength(100), StringLength(20, ErrorMessage = "Il nome non può avere più di 20 caratteri.")]public string Nome { get; set; } = nome;
 
-    [StringLength(20, ErrorMessage = "Il nome non può avere più di 20 caratteri.")]
-    public string Cognome { get; set; }
+    [Required, Column("cognome"), MaxLength(100), StringLength(20, ErrorMessage = "Il cognome non può avere più di 20 caratteri.")]public string Cognome { get; set; } = cognome;
 
-    public DateTime DataNascita { get; set; }
+    [Required, Column("data_nascita")]public DateTime DataNascita { get; set; } = dataNascita;
 }

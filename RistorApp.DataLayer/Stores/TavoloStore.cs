@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Stores
 {
-    public class TavoloStore
+    public class TavoloStore : ITavoloStore
     {
-        private List<Tavolo> _tavoli =
+        private readonly List<Tavolo> _tavoli =
         [
             new Tavolo(4, "Nord"),
             new Tavolo(2, "Sud"),
@@ -24,9 +25,15 @@ namespace RistorApp.DataLayer.Stores
             return _tavoli;
         }
 
-        private Tavolo? Get(int id)
+        public Tavolo Get(int id)
         {
-            return _tavoli.FirstOrDefault(tavolo => tavolo.Id == id);
+            return _tavoli.FirstOrDefault(tavolo => tavolo.Id == id) ?? throw new Exception($"Tavolo con id {id} non trovato");
+        }
+        
+        public List<Tavolo> Get(List<Prenotazione> coincidenze, int postiRichiesti)
+        {
+            return [..Get().Where(t => t.NumeroPersone >= postiRichiesti
+                                       && coincidenze.Any(p => p.IdTavolo == t.Id) == false)];
         }
 
         public bool Create(Tavolo tavoloDaAggiungere)
@@ -35,14 +42,18 @@ namespace RistorApp.DataLayer.Stores
             return true;
         }
         
-        public bool Update(Tavolo tavoloDaModificare)
+        public bool Update(TavoloCreateModel nuovaVersione)
         {
-            var nuovaLista = new List<Tavolo>();
-            foreach (var tavolo in _tavoli)
+            var vecchiaVersione = Get(nuovaVersione.Id);
+            
+            if (vecchiaVersione == null)
             {
-                nuovaLista.Add(tavolo.Id == tavoloDaModificare.Id ? tavoloDaModificare : tavolo);
+                throw new Exception($"Tavolo con id {nuovaVersione.Id} non trovato");
             }
-            _tavoli = nuovaLista; 
+            
+            vecchiaVersione.NumeroPersone = nuovaVersione.NumeroPersone;
+            vecchiaVersione.Posizione = nuovaVersione.Posizione;
+
             return true;
         }
 

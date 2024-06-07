@@ -30,7 +30,6 @@ namespace RistorApp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
         
         /// <summary>
         /// Questa funzione inserisce un nuovo tavolo
@@ -39,8 +38,8 @@ namespace RistorApp.Api.Controllers
         /// <returns></returns>
         /// <response code="201">Ritorna un messaggio di conferma</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpPost, ProducesResponseType(typeof(string), 201), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Insert(TavoloCreateModel tavoloDaInserire) //questa funzione inserisce un nuovo tavolo
+        [HttpPost, ProducesResponseType(typeof(TavoloCreateModel), 201), ProducesResponseType(typeof(string), 500)]
+        public IActionResult Insert(TavoloCreateModel tavoloDaInserire)
         {
             try 
             {
@@ -59,24 +58,34 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Questa funzione modifica un tavolo esistente
+        /// Permette l'aggiornamento di un tavolo
         /// </summary>
-        /// <param name="tavoloDaModificare">oggetto del tavolo da modificare</param>
-        /// <returns></returns>
-        /// <response code="200">Ritorna un messaggio di conferma</response>
-        /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Update(Tavolo tavoloDaModificare) 
+        /// <param name="id">ID del tavolo da modificare</param>
+        /// <param name="nuovaVersione">Versione aggiornata del tavolo</param>
+        /// <returns>Codice risultato dell'operazione</returns>
+        /// <response code="201">Messaggio di conferma</response>
+        /// <response code="404">Tavolo inesistente</response>
+        /// <response code="500">Errore non previsto</response>
+        [HttpPut("{id}"), ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
+        public IActionResult Update([FromRoute] int id, [FromBody] TavoloCreateModel nuovaVersione)
         {
-            try 
+            try
             {
-                var esito = tavoloService.Update(tavoloDaModificare);
+                var vecchiaVersione = tavoloService.Get(id);
+
+                nuovaVersione.Id = vecchiaVersione.Id;
+
+                var esito = tavoloService.Update(nuovaVersione);
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status200OK, "Tavolo modificato");
+                    return StatusCode(StatusCodes.Status200OK, "Cliente aggiornato");
                 }
 
                 throw new Exception("Si è verificato un errore");
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
             }
             catch (Exception ex)
             {
@@ -89,20 +98,26 @@ namespace RistorApp.Api.Controllers
         /// </summary>
         /// <param name="id">id del tavolo da rimuovere</param>
         /// <returns></returns>
-        /// <response code="200">Ritorna un messaggio di conferma</response>
-        /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpDelete, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 500)]
-        public  IActionResult Remove(int id) //questa funzione rimuove un tavolo
+        /// <response code="200">Corretta rimozione del tavolo</response>
+        /// <response code="404">Impossibile trovare tavolo con ID specificato</response>
+        /// <response code="500">Errore non previsto</response>
+        [HttpDelete ("{id}"), ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
+        public  IActionResult Remove([FromRoute]int id)
         {
-            try 
+            try
             {
                 var esito = tavoloService.Delete(id);
+
                 if (esito)
                 {
-                    return StatusCode(StatusCodes.Status200OK, "Tavolo rimosso");
+                    return StatusCode(StatusCodes.Status200OK, "Tavolo rimosso con successo");
                 }
 
-                throw new Exception("Si è verificato un errore");
+                throw new Exception("Impossibile rimuovere tavolo");
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
             }
             catch (Exception ex)
             {

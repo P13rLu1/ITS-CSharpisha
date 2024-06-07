@@ -8,14 +8,10 @@ namespace RistorApp.Api.Controllers
     /// Controller per la gestione delle prenotazioni
     /// </summary>
     /// <param name="prenotazioneService">classe dove faccio tutte le operazioni per le prenotazioni</param>
-    /// <param name="clienteService">classe dove faccio tutte le operazioni per le clienti</param>
-    /// <param name="tavoloService">classe dove faccio tutte le operazioni per le tavoli</param>
     [ApiController]
     [Route("[controller]")]
     public class PrenotazioneController(
-        PrenotazioneService prenotazioneService,
-        ClienteService clienteService,
-        TavoloService tavoloService)
+        PrenotazioneService prenotazioneService)
         : ControllerBase
     {
         /// <summary>
@@ -36,68 +32,51 @@ namespace RistorApp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        
         /// <summary>
-        /// Questa funzione restituisce se ci sono tavoli disponibili in base al numero di posti desiderati e alla data della prenotazione
+        /// Permette la ricerca di una specifica prenotazione
         /// </summary>
-        /// <param name="postiDesiderati">variabile per i posti desiderati</param>
-        /// <param name="dataPrenotazione">variabile per la data di prenotazione</param>
-        /// <returns></returns>
-        /// <response code="200">Ritorna un messaggio di conferma</response>
-        /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpGet("tavoli-disponibili"), ProducesResponseType(typeof(List<Tavolo>), 200), ProducesResponseType(typeof(string), 500)]
-        public IActionResult GetTavoliDisponibili(int postiDesiderati, DateTime dataPrenotazione)
+        /// <param name="id">L'ID della prenotazione da cercare</param>
+        /// <returns>Prenotazione trovata se presente nel database</returns>
+        [HttpGet("{id}")]
+        public Prenotazione? GetById([FromRoute] int id)
         {
             try
             {
-                var tavoli = tavoloService.Get();
-                var prenotazioni = prenotazioneService.Get(dataPrenotazione);
-                var tavoliOccupati = prenotazioni.Select(p => p.IdTavolo).Distinct();
-                var tavoliDisponibili = tavoli.Where(t => !tavoliOccupati.Contains(t.Id) && t.NumeroPersone >= postiDesiderati);
-                return StatusCode(StatusCodes.Status200OK, tavoliDisponibili);
+                return prenotazioneService.Get(id);
             }
-            catch (Exception ex)
+            catch (IndexOutOfRangeException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return null;
             }
         }
 
         /// <summary>
-        /// Inserisce una nuova prenotazione.
+        /// Permette l'inserimento di una nuova prenotazione
         /// </summary>
-        /// <param name="idCliente">Il codice identificativo univoco del cliente.</param>
-        /// <param name="idTavolo">Il codice identificativo univoco del tavolo.</param>
-        /// <param name="dataPrenotazione">La data della prenotazione.</param>
-        /// <returns>Un messaggio che conferma l'avvenuta creazione della prenotazione.</returns>
-        /// <response code="201">Ritorna un messaggio di conferma della creazione della prenotazione.</response>
-        /// <response code="404">Se il cliente con l'id in input non esiste.</response>
-        /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
-        /// <response code="500">Se si è verificato un errore non previsto.</response>
-        [HttpPost, ProducesResponseType(typeof(string), 201), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 409), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Insert(int idCliente, int idTavolo, DateTime dataPrenotazione)
+        /// <param name="model">I dati della prenotazione da inserire</param>
+        /// <returns>Codice risultato dell'operazione</returns>
+        /// <response code="201">Messaggio di conferma</response>
+        /// <response code="404">Impossibile trovare cliente con ID specificato</response>
+        /// <response code="500">Errore non previsto</response>
+        [HttpPost, ProducesResponseType(typeof(List<PrenotazioneCreateModel>), 201), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
+        public IActionResult Insert([FromBody] PrenotazioneCreateModel model)
         {
             try
             {
-                if (clienteService.Get(idCliente) == null!)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound, $"Cliente {idCliente} non trovato");
-                }
+                var esito = prenotazioneService.Create(model);
 
-                var coincidenze = prenotazioneService.Get(dataPrenotazione);
-                var occupato = coincidenze.Any(c => c.IdTavolo == idTavolo);
-
-                if (occupato)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, $"Tavolo {idTavolo} non disponibile per {dataPrenotazione.ToShortDateString()}");
-                }
-
-                var esito = prenotazioneService.Create(idCliente, idTavolo, dataPrenotazione);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status201Created, "Prenotazione inserita");
+                } else
+                {
+                    throw new Exception("Si è verificato un errore");
                 }
-
-                throw new Exception("Si è verificato un errore");
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
             }
             catch (Exception ex)
             {
@@ -106,38 +85,34 @@ namespace RistorApp.Api.Controllers
         }
         
         /// <summary>
-        /// Aggiorna la prenotazione con i dati in input
+        /// Permette l'aggiornamento di una prenotazione
         /// </summary>
-        /// <param name="id">id della prenotazione</param>
-        /// <param name="idCliente">id del cliente della nuova prenotazione</param>
-        /// <param name="idTavolo">id del tavolo della nuova prenotazione</param>
-        /// <param name="dataPrenotazione">dalla della nuova prenotazione</param>
-        /// <returns></returns>
-        /// <response code="200">Ritorna un messaggio di conferma della creazione della prenotazione.</response>
-        /// <response code="404">Se il cliente con l'id in input non esiste.</response>
-        /// <response code="409">Se il tavolo è già occupato per la data della prenotazione.</response>
-        /// <response code="500">Se si è verificato un errore non previsto.</response>
-        [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 409), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Update(int id, int idCliente, int idTavolo, DateTime dataPrenotazione)
+        /// <param name="id">ID della prenotazione da modificare</param>
+        /// <param name="nuovaVersione">Versione aggiornata della prenotazione</param>
+        /// <returns>Codice risultato dell'operazione</returns>
+        /// <response code="201">Messaggio di conferma</response>
+        /// <response code="404">Prenotazione inesistente</response>
+        /// <response code="500">Errore non previsto</response>
+        [HttpPut("{id}"), ProducesResponseType(typeof(List<PrenotazioneCreateModel>), 201), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
+        public IActionResult Update([FromRoute] int id, [FromBody] PrenotazioneCreateModel nuovaVersione)
         {
             try
             {
+                var vecchiaVersione = prenotazioneService.Get(id);
 
-                var coincidenze = prenotazioneService.Get(dataPrenotazione);
-                var occupato = coincidenze.Any(c => c.IdTavolo == idTavolo && c.Id != id);
+                nuovaVersione.Id = vecchiaVersione.Id;
 
-                if (occupato)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, $"Tavolo {idTavolo} non disponibile per {dataPrenotazione.ToShortDateString()}");
-                }
-
-                var esito = prenotazioneService.Update(id, idCliente, idTavolo, dataPrenotazione);
+                var esito = prenotazioneService.Update(nuovaVersione);
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status200OK, "Prenotazione aggiornata");
                 }
 
                 throw new Exception("Si è verificato un errore");
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
             }
             catch (Exception ex)
             {
@@ -154,19 +129,20 @@ namespace RistorApp.Api.Controllers
         /// <response code="404">Se la prenotazione con l'id in input non esiste</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
         [HttpDelete, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
-        public IActionResult Remove(int id)
+        public IActionResult Remove([FromRoute]int id)
         {
             try
-            { 
+            {
                 var esito = prenotazioneService.Delete(id);
+
                 if (esito)
                 {
                     return StatusCode(StatusCodes.Status200OK, "Prenotazione rimossa");
                 }
 
-                throw new ArgumentOutOfRangeException(nameof(id), "Prenotazione non presente nel database");
+                throw new Exception("Impossibile rimuovere prenotazione");
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (IndexOutOfRangeException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound, ex.Message);
             }

@@ -1,13 +1,14 @@
 ﻿using RistorApp.DataLayer.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Stores
 {
-    public class PrenotazioneStore
+    public class PrenotazioneStore : IPrenotazioneStore
     {
-        private readonly List<Prenotazione> _prenotazioni =
+        private readonly List<Prenotazione> _store =
         [
             new Prenotazione(1, 3, DateTime.Parse("2024/6/7")),
             new Prenotazione(2, 7, DateTime.Parse("2024/6/7")),
@@ -16,39 +17,44 @@ namespace RistorApp.DataLayer.Stores
 
         public List<Prenotazione> Get()
         {
-            return _prenotazioni;
+            return _store;
         }
 
-        public Prenotazione? Get(int id)
+        public Prenotazione Get(int id)
         {
-            return _prenotazioni.FirstOrDefault(prenotazione => prenotazione.Id == id);
+            var prenotazioneTrovata = Get().FirstOrDefault(p => p.Id == id);
+            
+            if (prenotazioneTrovata == null)
+            {
+                throw new Exception($"Prenotazione con id {id} non trovato");
+            }
+            
+            return prenotazioneTrovata;
         }
 
         public bool Create(Prenotazione prenotazioneDaAggiungere)
         {
-            _prenotazioni.Add(prenotazioneDaAggiungere);
+            _store.Add(prenotazioneDaAggiungere);
+            
             return true;
         }
         
-        public bool Update(Prenotazione prenotazioneDaAggiornare)
+        public bool Update(PrenotazioneCreateModel nuovaVersione)
         {
-            var index = _prenotazioni.Where( p => p.Id == prenotazioneDaAggiornare.Id).Select((_, i) => i).FirstOrDefault();
-            if (index >= 0)
-            {
-                _prenotazioni[index] = prenotazioneDaAggiornare;
-                return true;
-            }
-            return false;
+            var vecchiaVersione = Get(nuovaVersione.Id);
+
+            vecchiaVersione.IdTavolo = nuovaVersione.IdTavolo;
+            vecchiaVersione.IdCliente = nuovaVersione.IdCliente;
+
+            return true;
         }
 
         public bool Delete(int id)
         {
             var prenotazioneDaRimuovere = Get(id);
-            if (prenotazioneDaRimuovere == null)
-            {
-                throw new Exception($"Prenotazione con id {id} non trovato");
-            }
-            return _prenotazioni.Remove(prenotazioneDaRimuovere); 
+
+            _store.Remove(prenotazioneDaRimuovere);
+            return true;
         }
     }
 }

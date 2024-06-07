@@ -1,11 +1,10 @@
 ﻿using RistorApp.DataLayer.Models;
-using RistorApp.DataLayer.Stores;
-using System;
 using System.Collections.Generic;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Services
 {
-    public class ClienteService(ClienteStore clienteStore)
+    public class ClienteService(IClienteStore clienteStore)
     {
         public List<Cliente> Get()
         {
@@ -14,24 +13,18 @@ namespace RistorApp.DataLayer.Services
 
         public Cliente Get(int id)
         {
-            var clienteTrovato = clienteStore.Get(id);
-            if (clienteTrovato == null)
-            {
-                throw new Exception($"Cliente con id {id} non trovato");
-            }
-            return clienteTrovato;
+            return clienteStore.Get(id);
         }
 
         public bool Create(ClienteCreateModel clienteDaCreare)
         {
-            var clienteDaAggiungere = new Cliente(clienteDaCreare.Nome.ToUpper(), clienteDaCreare.Cognome.ToUpper(), clienteDaCreare.DataNascita ?? DateTime.MinValue);
-            clienteStore.Create(clienteDaAggiungere);
-            return true;
+            var clienteDaAggiungere = new Cliente(clienteDaCreare.Nome.ToUpper(), clienteDaCreare.Cognome.ToUpper(), clienteDaCreare.DataNascita);
+            return clienteStore.Create(clienteDaAggiungere);
         }
 
-        public bool Update(Cliente clienteDaModificare)
+        public bool Update(ClienteCreateModel nuovaVersione)
         {
-            return clienteStore.Update(clienteDaModificare);
+            return clienteStore.Update(nuovaVersione);
         }
 
         public bool Delete(int id)

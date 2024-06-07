@@ -1,28 +1,26 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RistorApp.DataLayer.Models
 {
-    public class Prenotazione
+    [Table("prenotazione")]public sealed class Prenotazione(int idCliente, int idTavolo, DateTime dataPrenotazione)
     {
-        public Prenotazione(int idCliente, int idTavolo, DateTime dataPrenotazione)
-        {
-            IdCliente = idCliente;
-            IdTavolo = idTavolo;
-            Data = dataPrenotazione;
+        // Id = ++_contatore;
 
-            Id = ++_contatore;
-        }
+        // private static int _contatore;
 
-        private static int _contatore;
+        [Key, Column("id")]public int Id { get; set; } 
 
-        public int Id { get; set; } 
+        [Required, Column("fk_cliente")]public int IdCliente { get; set; } = idCliente;
 
-        public int IdCliente { get; set; }
+        // [ForeignKey(nameof(IdCliente))] public Cliente FkClienteNavigation { get; set; }
 
-        public int IdTavolo { get; set; }
+        [Required, Column("fk_tavolo")]public int IdTavolo { get; set; } = idTavolo;
+
+        // [ForeignKey(nameof(IdTavolo))] public Tavolo FkTavoloNavigation { get; set; }
         
-        [Required, DefaultValue(null)]public DateTime Data { get; set; }
+        [Required, Column("data"), DefaultValue(null)]public DateTime Data { get; set; } = dataPrenotazione;
     }
 }

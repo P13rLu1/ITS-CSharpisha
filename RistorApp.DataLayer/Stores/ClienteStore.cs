@@ -1,13 +1,14 @@
 ﻿using RistorApp.DataLayer.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
+using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.DataLayer.Stores
 {
-    public class ClienteStore
+    public class ClienteStore : IClienteStore
     {
-        private List<Cliente> _clienti =
+        private readonly List<Cliente> _clienti =
         [
             new Cliente("Tizio", "Caio", DateTime.Parse("1990/01/01")),
             new Cliente("Mario", "Rossi", DateTime.Parse("1984/11/27")),
@@ -19,9 +20,15 @@ namespace RistorApp.DataLayer.Stores
             return _clienti;
         }
 
-        public Cliente? Get(int id)
+        public Cliente Get(int id)
         {
-            return _clienti.FirstOrDefault(cliente => cliente.Id == id);
+            var clienteTrovato = _clienti.FirstOrDefault(cliente => cliente.Id == id);
+            
+            if (clienteTrovato == null)
+            {
+                throw new Exception($"Cliente con id {id} non trovato");
+            }
+            return clienteTrovato;
         }
 
         public bool Create(Cliente clienteDaAggiungere)
@@ -30,14 +37,14 @@ namespace RistorApp.DataLayer.Stores
             return true;
         }
 
-        public bool Update(Cliente clienteDaModificare)
+        public bool Update(ClienteCreateModel nuovaVersione)
         {
-            var nuovaLista = new List<Cliente>();
-            foreach (var cliente in _clienti)
-            {
-                nuovaLista.Add(cliente.Id == clienteDaModificare.Id ? clienteDaModificare : cliente);
-            }
-            _clienti = nuovaLista; 
+            var vecchiaVersione = Get(nuovaVersione.Id);
+            
+            vecchiaVersione.Nome = nuovaVersione.Nome;
+            vecchiaVersione.Cognome = nuovaVersione.Cognome;
+            vecchiaVersione.DataNascita = nuovaVersione.DataNascita;
+
             return true;
         }
 
