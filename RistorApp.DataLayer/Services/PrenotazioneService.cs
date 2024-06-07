@@ -39,7 +39,11 @@ namespace RistorApp.DataLayer.Services
                 throw new Exception($"Nessun tavolo disponibile da {payload.PostiDesiderati} posti in data {payload.Data.ToShortDateString()}");
             }
 
-            Prenotazione prenotazioneDaAggiungere = new Prenotazione(payload.IdCliente,payload.IdTavolo,payload.Data);
+            Prenotazione prenotazioneDaAggiungere = new Prenotazione() {
+                IdCliente = payload.IdCliente,
+                IdTavolo = disponibili.First().Id,
+                Data = payload.Data
+            };
             
             return prenotazioneStore.Create(prenotazioneDaAggiungere);
         }

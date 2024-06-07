@@ -1,8 +1,8 @@
+using RistorApp.DataLayer.Services;
+using RistorApp.DataLayer.Stores;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using RistorApp.DataLayer;
-using RistorApp.DataLayer.Services;
-using RistorApp.DataLayer.Stores;
 using RistorApp.DataLayer.Stores.Interfaces;
 
 namespace RistorApp.Api
@@ -34,7 +34,7 @@ namespace RistorApp.Api
             builder.Services.AddScoped<TavoloService>();
             builder.Services.AddScoped<PrenotazioneService>();
 
-            bool useDb = false;
+            bool useDb = true;
             if (useDb)
             {
                 builder.Services.AddScoped<IClienteStore, ClienteDbStore>();

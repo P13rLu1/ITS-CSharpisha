@@ -90,7 +90,7 @@ namespace RistorApp.Api.Controllers
         /// <response code="200">Messaggio di conferma</response>
         /// <response code="404">Cliente inesistente</response>
         /// <response code="500">Errore non previsto</response>
-        [HttpPut, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
+        [HttpPut("{id}"), ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
         public IActionResult Update([FromRoute] int id, [FromBody] ClienteCreateModel nuovaVersione) 
         {
             try

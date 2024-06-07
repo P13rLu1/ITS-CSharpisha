@@ -128,7 +128,7 @@ namespace RistorApp.Api.Controllers
         /// <response code="200">Ritorna un messaggio di conferma</response>
         /// <response code="404">Se la prenotazione con l'id in input non esiste</response>
         /// <response code="500">Se si è verificato un errore non previsto</response>
-        [HttpDelete, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
+        [HttpDelete("{id}"), ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 404), ProducesResponseType(typeof(string), 500)]
         public IActionResult Remove([FromRoute]int id)
         {
             try

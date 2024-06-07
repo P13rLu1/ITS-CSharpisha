@@ -10,9 +10,9 @@ namespace RistorApp.DataLayer.Stores
     {
         private readonly List<Prenotazione> _store =
         [
-            new Prenotazione(1, 3, DateTime.Parse("2024/6/7")),
-            new Prenotazione(2, 7, DateTime.Parse("2024/6/7")),
-            new Prenotazione(3, 3, DateTime.Parse("2024/6/10")),
+            // new Prenotazione(1, 3, DateTime.Parse("2024/6/7")),
+            // new Prenotazione(2, 7, DateTime.Parse("2024/6/7")),
+            // new Prenotazione(3, 3, DateTime.Parse("2024/6/10")),
         ];
 
         public List<Prenotazione> Get()

@@ -5,13 +5,13 @@ using RistorApp.DataLayer.Models;
 
 namespace RistorApp.ConsoleApp.Controllers
 {
-    internal class TavoloController
+    internal class PrenotazioneController
     {
-        private TavoloService _tavoloService;
+        private PrenotazioneService _prenotazioneService;
 
-        public TavoloController(TavoloService tavoloService)
+        public PrenotazioneController(PrenotazioneService prenotazioneService) 
         {
-            _tavoloService = tavoloService;
+            _prenotazioneService = prenotazioneService;
         }
 
         public void Menu()
@@ -28,7 +28,7 @@ namespace RistorApp.ConsoleApp.Controllers
 
                 scelta = Console.ReadLine()?.ToLower() ?? "";
 
-                switch (scelta)
+                switch(scelta)
                 {
                     case "1":
                         Aggiungi();
@@ -40,7 +40,7 @@ namespace RistorApp.ConsoleApp.Controllers
                         Elimina();
                         break;
                     case "4":
-                        Visualizza();
+                        Visualliza();
                         break;
                     default:
                         if (scelta != "q")
@@ -54,16 +54,26 @@ namespace RistorApp.ConsoleApp.Controllers
 
         private void Aggiungi()
         {
-            var numeroPersone = ReadUtility.Intero("Inserire numero persone: ");
-            Console.Write("Inserire posizione: ");
-            var posizione = Console.ReadLine() ?? "";
+            int idCliente = ReadUtility.Intero("Inserire ID cliente: ");
+            int postiDesiderati = ReadUtility.Intero("Inserire numero posti: ");
+            DateTime dataPrenotazione = ReadUtility.Data("Inserire data prenotazione (YYYY/MM/DD): ");
 
-            TavoloCreateModel nuovoTavolo = new(numeroPersone, posizione);
-            var esito = _tavoloService.Create(nuovoTavolo);
-
-            if (esito)
+            try
             {
-                Console.WriteLine("Aggiunto nuovo tavolo con successo!");
+                PrenotazioneCreateModel nuovaPrenotazione = new();
+                nuovaPrenotazione.IdCliente = idCliente;
+                nuovaPrenotazione.PostiDesiderati = postiDesiderati;
+                nuovaPrenotazione.Data = dataPrenotazione;
+                bool esito = _prenotazioneService.Create(nuovaPrenotazione);
+
+                if (esito)
+                {
+                    Console.WriteLine("Prenotazione effettuata con successo!");
+                }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -71,21 +81,20 @@ namespace RistorApp.ConsoleApp.Controllers
         {
             try
             {
-                int id = ReadUtility.Intero("Inserire ID tavolo: ");
-                Tavolo vecchiaVersione = _tavoloService.Get(id);
+                int id = ReadUtility.Intero("Inserire ID prenotazoine: ");
+                Prenotazione vecchiaVersione = _prenotazioneService.Get(id);
 
-                TavoloCreateModel nuovaVersione = new(
-                    vecchiaVersione.NumeroPersone,
-                    vecchiaVersione.Posizione
-                    );
-
+                PrenotazioneCreateModel nuovaVersione = new();
+                nuovaVersione.IdCliente = vecchiaVersione.IdCliente;
+                nuovaVersione.IdTavolo = vecchiaVersione.IdTavolo;
+                nuovaVersione.Data = vecchiaVersione.Data;
                 nuovaVersione.Id = vecchiaVersione.Id;
 
                 string scelta;
                 do
                 {
-                    Console.Write("[1] Numero persone | ");
-                    Console.Write("[2] Posizione | ");
+                    Console.Write("[1] ID tavolo | ");
+                    Console.Write("[2] Data prenotazione | ");
                     Console.WriteLine("[q] Torna indietro");
 
                     scelta = Console.ReadLine() ?? "";
@@ -93,11 +102,10 @@ namespace RistorApp.ConsoleApp.Controllers
                     switch (scelta)
                     {
                         case "1":
-                            nuovaVersione.NumeroPersone = ReadUtility.Intero("Inserire nuovo numero persone: ");
+                            nuovaVersione.IdTavolo = ReadUtility.Intero("Inserire nuovo ID tavolo: ");
                             break;
                         case "2":
-                            Console.Write("Inserire nuova posizione: ");
-                            nuovaVersione.Posizione = Console.ReadLine() ?? "";
+                            nuovaVersione.Data = ReadUtility.Data("Inserire nuvoa data: ");
                             break;
                         default:
                             if (scelta != "q")
@@ -107,7 +115,7 @@ namespace RistorApp.ConsoleApp.Controllers
                             break;
                     }
 
-                    _tavoloService.Update(nuovaVersione);
+                    _prenotazioneService.Update(nuovaVersione);
                 } while (scelta != "q");
             }
             catch (IndexOutOfRangeException ex)
@@ -118,30 +126,16 @@ namespace RistorApp.ConsoleApp.Controllers
 
         private void Elimina()
         {
-            int output = ReadUtility.Intero("Inserire ID tavolo: ", true);
+            int scelta = ReadUtility.Intero("Inserire ID prenotazione: ", true);
 
-            try
-            {
-                bool esito = _tavoloService.Delete(output);
-
-                if (esito)
-                {
-                    Console.WriteLine("Tavolo rimosso con successo!");
-                }
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            _prenotazioneService.Delete(scelta);
         }
 
-        private void Visualizza()
+        private void Visualliza()
         {
-            var tavoli = _tavoloService.Get();
-
-            foreach (var tavolo in tavoli)
+            foreach (Prenotazione prenotazione in _prenotazioneService.Get())
             {
-                Console.WriteLine($"ID: {tavolo.Id} | Persone: {tavolo.NumeroPersone} | Posizione: {tavolo.Posizione}");
+                Console.WriteLine(prenotazione);
             }
         }
     }
